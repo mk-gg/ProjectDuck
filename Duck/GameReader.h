@@ -4,9 +4,10 @@
 class GameReader 
 {
 
+private:
+	GameState state;
+	
 public:
 	const GameState* GetNextState();
 
-private:
-	GameState state;
 };

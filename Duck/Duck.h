@@ -4,6 +4,7 @@
 #include <dinput.h>
 #include <mutex>
 #include <sstream>
+#include <condition_variable>
 
 #include "Logger.h"
 
@@ -18,25 +19,31 @@ typedef HRESULT(__stdcall* D3DPresentFunc)(LPDIRECT3DDEVICE9, CONST RECT*, CONST
 class Duck
 {
 
-public:
-
-	void   Run();
 private:
 
-	static void                        ShowMenu();
-	static void                        ShowConsole();
+	static LRESULT WINAPI HookedWindowMessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	static HRESULT __stdcall HookedD3DPresent(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CONST RECT* pDestRect, HWND hDestWindow, CONST RGNDATA* pDirtyRegion);
 
-	static void                        Update();
-	static void                        InitializeOverlay();
-	static bool                        Initialized;
 
-	// DirectX stuff
-	static void                        HookDirectX();
-	static void                        UnhookDirectX();
+	static D3DPresentFunc OriginalD3DPresent;
+	static WNDPROC OriginalWindowMessageHandler;
+	static std::condition_variable OverlayInitialized;
 
-	static LRESULT WINAPI              WindowMessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	static HRESULT __stdcall           HookedD3DPresent(LPDIRECT3DDEVICE9 Device, CONST RECT* pSrcRect, CONST RECT* pDestRect, HWND hDestWindow, CONST RGNDATA* pDirtyRegion);
+	static void ShowLoader();
+	static void ShowMenu();
+	static void ShowConsole();
+	static void Update();
+	static void InitializeOverlay();
+	static void HookDirectX();
+	static void UnhookDirectX();
 
-	static D3DPresentFunc              OriginalD3DPresent;
-	static LPDIRECT3DDEVICE9           DxDevice;
+public:
+	static std::mutex DxDeviceMutex;
+	static LPDIRECT3DDEVICE9 DxDevice;
+
+
+	void   Run();
+	static void WaitForOverlayToInit();
+	
+	
 };

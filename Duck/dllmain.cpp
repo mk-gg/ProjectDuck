@@ -1,25 +1,13 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
-#include <boost/python.hpp>
-#include <iostream>
+#include "PyStructs.h"
 #include "Duck.h"
 #include "Strings.h"
 #include <Windows.h>
 
 
 
-void greet()
-{
-   std::cout << "REMY zeeeee rat";
-}
 
-
-BOOST_PYTHON_MODULE(Duck)
-{
-    using namespace boost::python;
-    def("greet", greet);
-
-}
 
 DWORD WINAPI OverlayThreadEntryPoint(LPVOID lpParam) {
 

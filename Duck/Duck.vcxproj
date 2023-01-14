@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -109,6 +109,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>C:\Users\Gramps\AppData\Local\Programs\Python\Python39-32\include;C:\boost_1_77_0;$(SolutionDir)Duck\includes;$(SolutionDir)Component</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -156,25 +157,119 @@
   <ItemGroup>
     <ClInclude Include="Duck.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GameData.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameReader.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="includes\audiodefs.h" />
+    <ClInclude Include="includes\comdecl.h" />
+    <ClInclude Include="includes\D2D1.h" />
+    <ClInclude Include="includes\D2D1Helper.h" />
+    <ClInclude Include="includes\D2DBaseTypes.h" />
+    <ClInclude Include="includes\D2Derr.h" />
+    <ClInclude Include="includes\D3D10.h" />
+    <ClInclude Include="includes\D3D10effect.h" />
+    <ClInclude Include="includes\d3d10misc.h" />
+    <ClInclude Include="includes\d3d10sdklayers.h" />
+    <ClInclude Include="includes\D3D10shader.h" />
+    <ClInclude Include="includes\D3D10_1.h" />
+    <ClInclude Include="includes\D3D10_1shader.h" />
+    <ClInclude Include="includes\D3D11.h" />
+    <ClInclude Include="includes\D3D11SDKLayers.h" />
+    <ClInclude Include="includes\D3D11Shader.h" />
+    <ClInclude Include="includes\d3d9.h" />
+    <ClInclude Include="includes\d3d9caps.h" />
+    <ClInclude Include="includes\d3d9types.h" />
+    <ClInclude Include="includes\D3Dcommon.h" />
+    <ClInclude Include="includes\D3Dcompiler.h" />
+    <ClInclude Include="includes\D3DCSX.h" />
+    <ClInclude Include="includes\D3DX10.h" />
+    <ClInclude Include="includes\d3dx10async.h" />
+    <ClInclude Include="includes\D3DX10core.h" />
+    <ClInclude Include="includes\D3DX10math.h" />
+    <ClInclude Include="includes\D3DX10mesh.h" />
+    <ClInclude Include="includes\D3DX10tex.h" />
+    <ClInclude Include="includes\D3DX11.h" />
+    <ClInclude Include="includes\D3DX11async.h" />
+    <ClInclude Include="includes\D3DX11core.h" />
+    <ClInclude Include="includes\D3DX11tex.h" />
+    <ClInclude Include="includes\d3dx9.h" />
+    <ClInclude Include="includes\d3dx9anim.h" />
+    <ClInclude Include="includes\d3dx9core.h" />
+    <ClInclude Include="includes\d3dx9effect.h" />
+    <ClInclude Include="includes\d3dx9math.h" />
+    <ClInclude Include="includes\d3dx9mesh.h" />
+    <ClInclude Include="includes\d3dx9shader.h" />
+    <ClInclude Include="includes\d3dx9shape.h" />
+    <ClInclude Include="includes\d3dx9tex.h" />
+    <ClInclude Include="includes\d3dx9xof.h" />
+    <ClInclude Include="includes\Dcommon.h" />
     <ClInclude Include="includes\detours.h" />
     <ClInclude Include="includes\detver.h" />
+    <ClInclude Include="includes\dinput.h" />
+    <ClInclude Include="includes\dinputd.h" />
+    <ClInclude Include="includes\dsconf.h" />
+    <ClInclude Include="includes\dsetup.h" />
+    <ClInclude Include="includes\dsound.h" />
+    <ClInclude Include="includes\DWrite.h" />
+    <ClInclude Include="includes\dxdiag.h" />
+    <ClInclude Include="includes\DxErr.h" />
+    <ClInclude Include="includes\dxfile.h" />
+    <ClInclude Include="includes\DXGI.h" />
+    <ClInclude Include="includes\DXGIFormat.h" />
+    <ClInclude Include="includes\DXGIType.h" />
+    <ClInclude Include="includes\dxsdkver.h" />
+    <ClInclude Include="includes\gameux.h" />
+    <ClInclude Include="includes\PIXPlugin.h" />
+    <ClInclude Include="includes\rmxfguid.h" />
+    <ClInclude Include="includes\rmxftmpl.h" />
+    <ClInclude Include="includes\rpcsal.h" />
     <ClInclude Include="includes\syelog.h" />
+    <ClInclude Include="includes\X3DAudio.h" />
+    <ClInclude Include="includes\xact3.h" />
+    <ClInclude Include="includes\xact3d3.h" />
+    <ClInclude Include="includes\xact3wb.h" />
+    <ClInclude Include="includes\XAPO.h" />
+    <ClInclude Include="includes\XAPOBase.h" />
+    <ClInclude Include="includes\XAPOFX.h" />
+    <ClInclude Include="includes\XAudio2.h" />
+    <ClInclude Include="includes\XAudio2fx.h" />
+    <ClInclude Include="includes\XDSP.h" />
+    <ClInclude Include="includes\XInput.h" />
+    <ClInclude Include="includes\xma2defs.h" />
+    <ClInclude Include="includes\xnamath.h" />
+    <ClInclude Include="ItemInfo.h" />
+    <ClInclude Include="json\json.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="Memory.h" />
+    <ClInclude Include="MemoryReadable.h" />
+    <ClInclude Include="Offset.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PyStructs.h" />
+    <ClInclude Include="SpellInfo.h" />
+    <ClInclude Include="stbi\stb_image.h" />
+    <ClInclude Include="UnitInfo.h" />
+    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Duck.cpp" />
+    <ClCompile Include="GameData.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameReader.cpp" />
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="Offset.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SpellInfo.cpp" />
+    <ClCompile Include="UnitInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Component\Component.vcxproj">
@@ -182,8 +277,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Library Include="libs\d3dx9.lib" />
     <Library Include="libs\detours.lib" />
     <Library Include="libs\syelog.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="includes\D3DX10math.inl" />
+    <None Include="includes\d3dx9math.inl" />
+    <None Include="includes\D3DX_DXGIFormatConvert.inl" />
+    <None Include="includes\xnamathconvert.inl" />
+    <None Include="includes\xnamathmatrix.inl" />
+    <None Include="includes\xnamathmisc.inl" />
+    <None Include="includes\xnamathvector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
