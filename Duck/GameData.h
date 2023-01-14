@@ -19,6 +19,11 @@ class GameData
 {
 private:
     static const char* FolderData;
+    static std::map<std::string, UnitInfo*> Units;
+    static std::map<std::string, SpellInfo*> Spells;
+    static std::map<int, ItemInfo*> Items;
+    static std::map<std::string, PDIRECT3DTEXTURE9> Images;
+
 	static void Load();
     static void LoadSpells(const char* fileName, float percentEnd);
     static void LoadItems(const char* fileName, float percentEnd);
@@ -28,11 +33,12 @@ private:
 
 public:
     static std::shared_ptr<LoadDataProgress> LoadProgress;
-    static std::map<std::string, UnitInfo*> Units;
-    static std::map<std::string, SpellInfo*> Spells;
-    static std::map<int, ItemInfo*> Items;
-    static std::map<std::string, PDIRECT3DTEXTURE9*> Images;
+
     static void LoadAsync();
+    static UnitInfo* GetUnit(std::string& str);
+    static SpellInfo* GetSpell(std::string& str);
+    static ItemInfo* GetItem(int id);
+    static PDIRECT3DTEXTURE9 GetImage(std::string& str);
 
 };
 

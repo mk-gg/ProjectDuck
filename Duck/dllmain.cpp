@@ -11,8 +11,7 @@
 
 DWORD WINAPI OverlayThreadEntryPoint(LPVOID lpParam) {
 
-    Duck duck;
-    duck.Run();
+    Duck::Run();
 
     return 0;
 }

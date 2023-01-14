@@ -18,8 +18,11 @@ public:
 	static int ObjHealth;
 	static int ObjMaxHealth;
 	static int ObjMana;
+	static int ObjMaxMana;
 	static int ObjArmor;
+	static int ObjBonusArmor;
 	static int ObjMagicRes;
+	static int ObjBonusMagicRes;
 	static int ObjBaseAtk;
 	static int ObjBonusAtk;
 	static int ObjMoveSpeed;

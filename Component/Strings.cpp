@@ -16,7 +16,7 @@ bool Strings::ValidAsciiString(const char* buff, int maxSize)
 	return false;
 }
 
-std::string Strings::ToLower(const std::string str)
+std::string Strings::ToLower(const std::string& str)
 {
 	std::string strLower;
 	strLower.resize(str.size());

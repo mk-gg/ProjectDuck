@@ -3,6 +3,7 @@
 #include <string>
 #include <windows.h>
 
+#include "ImGuiDrawable.h"
 #include "Vector.h"
 #include "imgui/imgui.h"
 #include "Strings.h"
@@ -10,7 +11,7 @@
 #include "Memory.h"
 #include "Logger.h"
 
-class GameObject : MemoryReadable
+class GameObject : MemoryReadable, ImGuiDrawable
 {
 public:
 	std::string name;

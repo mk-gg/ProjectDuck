@@ -7,7 +7,7 @@
 
 void greet()
 {
-    std::cout << "Added static data";
+    std::cout << "Added game object reading and optimized it & added more objects";
 }
 
 

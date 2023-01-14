@@ -7,6 +7,7 @@
 #include <condition_variable>
 
 #include "Logger.h"
+#include "GameReader.h"
 
 
 #include "imgui/imgui.h"
@@ -15,6 +16,9 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 typedef HRESULT(__stdcall* D3DPresentFunc)(LPDIRECT3DDEVICE9, CONST RECT*, CONST RECT*, HWND, CONST RGNDATA*);
+typedef HRESULT(__stdcall* BeginSceneFunc)(LPDIRECT3DDEVICE9);
+typedef HRESULT(__stdcall* SetVertexShaderFunc)(LPDIRECT3DDEVICE9, IDirect3DVertexShader9*);
+typedef HRESULT(__stdcall* SetTransformFunc)(LPDIRECT3DDEVICE9, D3DTRANSFORMSTATETYPE, const D3DMATRIX*);
 
 class Duck
 {
@@ -28,9 +32,10 @@ private:
 	static D3DPresentFunc OriginalD3DPresent;
 	static WNDPROC OriginalWindowMessageHandler;
 	static std::condition_variable OverlayInitialized;
+	static GameReader Reader;
 
-	static void ShowLoader();
-	static void ShowMenu();
+	static bool CheckGameDataLoading();
+	static void ShowMenu(GameState& state);
 	static void ShowConsole();
 	static void Update();
 	static void InitializeOverlay();
@@ -40,9 +45,10 @@ private:
 public:
 	static std::mutex DxDeviceMutex;
 	static LPDIRECT3DDEVICE9 DxDevice;
+	static HWND LeagueWindowHandle;
+	static RECT WindowRect;
 
-
-	void   Run();
+	static void   Run();
 	static void WaitForOverlayToInit();
 	
 	

@@ -91,7 +91,10 @@ public:
 
 
 
-	void SetTag(const char* tagStr);
+	void SetTag(std::string& str);
+	bool HasTag(UnitTag tag);
+	std::string StringifyTags();
+
 
 };
 
