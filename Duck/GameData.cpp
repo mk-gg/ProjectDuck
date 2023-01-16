@@ -261,7 +261,7 @@ void GameData::LoadUnits(const char* fileName, float& percentValue, float percen
 }
 
 
-bool LoadTextureFromHeap(void* heap, int heapSize, PDIRECT3DTEXTURE9* outTexture) {
+bool LoadTextureFromHeap(void* heap, size_t heapSize, PDIRECT3DTEXTURE9* outTexture) {
 	PDIRECT3DTEXTURE9 texture;
 
 	Duck::DxDeviceMutex.lock();

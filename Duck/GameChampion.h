@@ -21,6 +21,7 @@ public:
 	object SpellsToPy();
 	object ItemsToPy();
 
+	Vector2 GetHpBarPosition();
 	GameSpell spells[6];
 	ItemInfo* items[6];
 

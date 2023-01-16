@@ -15,10 +15,13 @@
 #include <dxva2api.h>
 #include <TlHelp32.h>
 
+#include <boost/exception/diagnostic_information.hpp>
+
 
 D3DPresentFunc Duck::OriginalD3DPresent = NULL;
 WNDPROC Duck::OriginalWindowMessageHandler = NULL;
 LPDIRECT3DDEVICE9 Duck::DxDevice = NULL;
+GameState* Duck::CurrentGameState = NULL;
 std::mutex Duck::DxDeviceMutex;
 std::condition_variable Duck::OverlayInitialized;
 GameReader Duck::Reader;
@@ -28,9 +31,11 @@ ScriptManager Duck::ScriptManager;
 
 
 
+
 void Duck::Run()
 {
 	try {
+
 		DxDeviceMutex.lock();
 
 		
@@ -60,12 +65,13 @@ bool Duck::CheckEssentialsLoaded()
 	return false;
 }
 
-void Duck::ShowMenu(GameState& state)
+void Duck::ShowMenu()
 {
 	static bool ShowConsoleWindow = true;
 	static bool ShowObjectExplorerWindow = true;
+	static bool ShowOffsetScanner = false;
 
-	ImGui::Begin("PY Duck", nullptr,
+	ImGui::Begin("A Duck", nullptr,
 		ImGuiWindowFlags_NoScrollbar |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_AlwaysAutoResize);
@@ -75,8 +81,11 @@ void Duck::ShowMenu(GameState& state)
 		if (ImGui::Button("Reload Scripts"))
 			LoadScripts();
 
+		//ImGui::LabelText("VPath", Globals::WorkingDir.u8string().c_str());
+		//ImGui::LabelText("GameVersion", Offset::GameVersion.c_str());
 		ImGui::Checkbox("Show Console", &ShowConsoleWindow);
 		ImGui::Checkbox("Show Object Explorer", &ShowObjectExplorerWindow);
+		//ImGui::Checkbox("Show Offset Scanner", &ShowOffsetScanner);
 		if (ImGui::TreeNode("Benchmarks")) {
 
 			Reader.GetBenchmarks().ImGuiDraw();
@@ -92,8 +101,7 @@ void Duck::ShowMenu(GameState& state)
 	}
 
 	ImGui::Separator();
-	if (state.gameStarted)
-		ScriptManager.ImGuiDrawMenu(ScriptContext);
+	ScriptManager.ImGuiDrawMenu(ScriptContext);
 
 
 	ImGui::End();
@@ -102,7 +110,10 @@ void Duck::ShowMenu(GameState& state)
 		ShowConsole();
 
 	if (ShowObjectExplorerWindow) 
-		ObjectExplorer::ImGuiDraw(state);
+		ObjectExplorer::ImGuiDraw(*CurrentGameState);
+
+	//if (ShowOffsetScanner)
+	//	OffsetScanner::ImGuiDraw();
 }
 
 void Duck::ShowConsole()
@@ -152,6 +163,28 @@ void Duck::InitializePython()
 	Logger::LogAll("Initializing Python");
 	PyImport_AppendInittab("duck", &PyInit_Duck);
 	Py_Initialize();
+	exec("from duck import *");
+}
+
+
+void Duck::SetupScriptExecutionContext()
+{
+	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::Begin("##Overlay", nullptr,
+		ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoScrollbar |
+		ImGuiWindowFlags_NoSavedSettings |
+		ImGuiWindowFlags_NoInputs |
+		ImGuiWindowFlags_NoBackground
+	);
+
+
+	ScriptContext.SetGameState(CurrentGameState);
+	ScriptContext.SetImGuiOverlay(ImGui::GetWindowDrawList());
+	ImGui::End();
 }
 
 void Duck::LoadScripts()
@@ -174,8 +207,14 @@ void Duck::Update()
 	if (CheckEssentialsLoaded())
 	{
 		//ImGui::ShowDemoWindow();
-		GameState& state = Reader.GetNextState();
-		ShowMenu(state);
+		CurrentGameState = Reader.GetNextState();
+		if (CurrentGameState->gameStarted) {
+			SetupScriptExecutionContext();
+
+			ShowMenu();
+			ScriptManager.ExecuteScripts(ScriptContext);
+			//ExecuteScripts();
+		}
 	}
 
 
@@ -302,11 +341,15 @@ HRESULT __stdcall Duck::HookedD3DPresent(LPDIRECT3DDEVICE9 Device, const RECT* p
 		Update();
 	}
 	catch (std::exception& error) {
-		Logger::File.Log("Error occured %s", error.what());
+		Logger::File.Log("Standard exception occured %s", error.what());
+		UnhookDirectX();
+	}
+	catch (error_already_set) {
+		Logger::File.Log("Boost::Python exception occured %s", Script::GetPyError().c_str());
 		UnhookDirectX();
 	}
 	catch (...) {
-		Logger::File.Log("Unexpected error occured.");
+		Logger::File.Log("Unexpected exception occured");
 		UnhookDirectX();
 	}
 	DxDeviceMutex.lock();

@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.pyd</TargetExt>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -164,14 +164,18 @@
     <ClInclude Include="GameChampion.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameHud.h" />
+    <ClInclude Include="GameJungle.h" />
+    <ClInclude Include="GameMinion.h" />
     <ClInclude Include="GameMissile.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameReader.h" />
     <ClInclude Include="GameRenderer.h" />
     <ClInclude Include="GameSpell.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameTurret.h" />
     <ClInclude Include="GameUnit.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="HKey.h" />
     <ClInclude Include="includes\audiodefs.h" />
     <ClInclude Include="includes\comdecl.h" />
     <ClInclude Include="includes\D2D1.h" />
@@ -258,6 +262,7 @@
     <ClInclude Include="Offset.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="PyExecutionContext.h" />
+    <ClInclude Include="PyImGui.h" />
     <ClInclude Include="PyStructs.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="ScriptManager.h" />
@@ -273,11 +278,14 @@
     <ClCompile Include="GameChampion.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="GameHud.cpp" />
+    <ClCompile Include="GameJungle.cpp" />
+    <ClCompile Include="GameMinion.cpp" />
     <ClCompile Include="GameMissile.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameReader.cpp" />
     <ClCompile Include="GameRenderer.cpp" />
     <ClCompile Include="GameSpell.cpp" />
+    <ClCompile Include="GameTurret.cpp" />
     <ClCompile Include="GameUnit.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Logger.cpp" />

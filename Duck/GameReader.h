@@ -37,6 +37,8 @@ private:
 	std::set<int> updatedObjects;
 
 
+	void ReadHoveredObject();
+	void SieveObjects();
 	void ReadObjectTree();
 	int ReadTreeNodes(std::queue<int>& nodesToVisit, int node);
 	void ReadGameObject(int address);
@@ -47,7 +49,7 @@ private:
 	
 
 public:
-	GameState& GetNextState();
+	GameState* GetNextState();
 	BenchmarkGameReader& GetBenchmarks();
 
 };

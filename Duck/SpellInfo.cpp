@@ -9,6 +9,7 @@ SpellInfo* SpellInfo::AddFlags(SpellFlags flags)
 
 void SpellInfo::ImGuiDraw()
 {
+	ImGui::Text("Icon: %s", icon.c_str());
 	ImGui::DragFloat("Cast Radius", &castRadius);
 	ImGui::DragFloat("Cast Range", &castRange);
 	ImGui::DragFloat("Delay", &delay);

@@ -1,5 +1,7 @@
 #include "GameSpell.h"
 #include "GameData.h"
+#include "Strings.h"
+#include "Duck.h"
 
 void GameSpell::ReadFromBaseAddress(int addr)
 {
@@ -11,6 +13,7 @@ void GameSpell::ReadFromBaseAddress(int addr)
 	int spellData = ReadInt(spellInfo + Offset::SpellInfoSpellData);
 
 	name = Memory::ReadString(ReadInt(spellData + Offset::SpellDataSpellName));
+	name = Strings::ToLower(name);
 	staticData = GameData::GetSpell(name);
 }
 
@@ -20,4 +23,15 @@ void GameSpell::ImGuiDraw()
 	ImGui::DragInt("Level", &lvl);
 	ImGui::DragFloat("Ready At", &readyAt);
 	ImGui::DragFloat("Value", &value);
+}
+
+float GameSpell::GetRemainingCooldown()
+{
+	float cd = readyAt - Duck::CurrentGameState->time;
+	return (cd >= 0.f ? cd : 0.0f);
+}
+
+object GameSpell::GetStaticData()
+{
+	return object(ptr(staticData));
 }

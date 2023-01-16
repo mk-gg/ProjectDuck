@@ -34,7 +34,7 @@ private:
 	static PyExecutionContext ScriptContext;
 
 	static bool CheckEssentialsLoaded();
-	static void ShowMenu(GameState& state);
+	static void ShowMenu();
 	static void ShowConsole();
 	static void Update();
 	static void InitializeOverlay();
@@ -44,9 +44,12 @@ private:
 	static void InitializePython();
 	static void LoadScripts();
 
+	static void SetupScriptExecutionContext();
+
 public:
 	static std::mutex DxDeviceMutex;
 	static LPDIRECT3DDEVICE9 DxDevice;
+	static GameState* CurrentGameState;
 	static HWND LeagueWindowHandle;
 	static RECT WindowRect;
 

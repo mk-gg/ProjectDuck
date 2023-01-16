@@ -10,9 +10,21 @@
 #include "Memory.h"
 #include "Logger.h"
 
+enum GameObjectType 
+{
+
+	OBJ_UNKNOWN,
+	OBJ_CHAMPION,
+	OBJ_MINION,
+	OBJ_JUNGLE,
+	OBJ_TURRET,
+	OBJ_MISSILE
+};
+
 class GameObject : MemoryReadable
 {
 public:
+	GameObjectType type;
 	std::string name;
 	Vector3 pos;
 	int	address;
@@ -26,6 +38,6 @@ public:
 	GameObject();
 	GameObject(std::string name);
 	void ReadFromBaseAddress(int baseAddr);
-	void ImGuiDraw();
+	virtual void ImGuiDraw();
 };
 

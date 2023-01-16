@@ -2,7 +2,7 @@
 #include "Logger.h"
 #include "Strings.h"
 
-std::string GetPyError()
+std::string Script::GetPyError()
 {
 	PyObject* exc, * val, * tb;
 	PyErr_Fetch(&exc, &val, &tb);
@@ -13,11 +13,14 @@ std::string GetPyError()
 	PyObject* errExcType = PyObject_Str(exc);
 
 	std::string returnVal = "Exception ";
-	returnVal.append(extract<std::string>(errExcType));
+	if (errExcType != NULL)
+		returnVal.append(extract<std::string>(errExcType));
 	returnVal.append(" occured on line: ");
-	returnVal.append(extract<std::string>(errExcLineNum));
+	if (errExcLineNum != NULL)
+		returnVal.append(extract<std::string>(errExcLineNum));
 	returnVal.append("\n");
-	returnVal.append(extract<std::string>(errValStr));
+	if (errValStr != NULL)
+		returnVal.append(extract<std::string>(errValStr));
 
 	return returnVal;
 }
@@ -94,7 +97,10 @@ bool Script::LoadInfo()
 
 bool Script::LoadFromFile(std::string& file)
 {
+	neverExecuted = false;
+	loaded = false;
 	fileName = file;
+	error.clear();
 
 	if (NULL != moduleObj) {
 		Logger::LogAll("Reloading script %s", file.c_str());
@@ -111,7 +117,8 @@ bool Script::LoadFromFile(std::string& file)
 		PyObject* ptype, * pvalue, * ptraceback;
 		PyErr_Fetch(&ptype, &pvalue, &ptraceback);
 
-		error = extract<std::string>(PyObject_Str(pvalue));
+		error.append("Failed to load: ");
+		error.append(extract<std::string>(PyObject_Str(pvalue)));
 	}
 	else {
 		if (LoadInfo() &&
@@ -119,7 +126,7 @@ bool Script::LoadFromFile(std::string& file)
 			LoadFunc(&functions[ScriptFunction::ON_MENU], "duck_menu") &&
 			LoadFunc(&functions[ScriptFunction::ON_LOAD], "duck_on_load")) {
 
-			error.clear();
+			
 			neverExecuted = true;
 			loaded = true;
 			return true;
@@ -131,10 +138,8 @@ bool Script::LoadFromFile(std::string& file)
 
 void Script::Execute(PyExecutionContext& ctx, ScriptFunction func)
 {
-	if (!loaded) {
-		error.clear();
-		error.append("Illegal execution of unloaded script.");
-	}
+	if (!error.empty())
+		return;
 
 	try {
 		neverExecuted = false;

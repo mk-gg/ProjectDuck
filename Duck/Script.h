@@ -25,11 +25,13 @@ private:
 public:
 	Script();
 	~Script();
-	bool         LoadFromFile(std::string& filePath);
-	void         Execute(PyExecutionContext& ctx, ScriptFunction func);
+	bool LoadFromFile(std::string& filePath);
+	void Execute(PyExecutionContext& ctx, ScriptFunction func);
+	static std::string GetPyError();
 
-	bool         loaded;
-	bool         neverExecuted;
+	bool loaded;
+	bool neverExecuted;
+
 
 	std::string  error;
 	std::string  fileName;

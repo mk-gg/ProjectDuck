@@ -1,5 +1,6 @@
 #include "GameChampion.h"
 #include "GameData.h"
+#include "Duck.h"
 
 
 GameChampion::GameChampion()
@@ -9,6 +10,7 @@ GameChampion::GameChampion()
 GameChampion::GameChampion(std::string name)
 	:GameUnit(name)
 {
+	type = OBJ_CHAMPION;
 }
 
 void GameChampion::ReadFromBaseAddress(int addr)
@@ -64,6 +66,16 @@ void GameChampion::ImGuiDraw()
 	}
 }
 
+Vector2 GameChampion::GetHpBarPosition()
+{
+	Vector3 p = pos.clone();
+	p.y += staticData->healthBarHeight;
+
+	Vector2 w2s = Duck::CurrentGameState->renderer.WorldToScreen(p);
+	w2s.y -= (Duck::CurrentGameState->renderer.height * 0.00083333335f * staticData->healthBarHeight);
+	w2s.x -= 70.f;
+	return w2s;
+}
 
 object GameChampion::SpellsToPy()
 {

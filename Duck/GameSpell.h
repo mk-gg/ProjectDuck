@@ -5,6 +5,8 @@
 #include "SpellInfo.h"
 #include "imgui/imgui.h"
 
+using namespace boost::python;
+
 class GameSpell : public MemoryReadable {
 
 public:
@@ -19,4 +21,7 @@ public:
 
 	void ReadFromBaseAddress(int addr);
 	void ImGuiDraw();
+	float GetRemainingCooldown();
+	object GetStaticData();
+
 };
