@@ -8,6 +8,7 @@
 #include "Memory.h"
 #include "Globals.h"
 #include "PyStructs.h"
+#include "OffsetScanner.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -71,7 +72,7 @@ void Duck::ShowMenu()
 	static bool ShowObjectExplorerWindow = true;
 	static bool ShowOffsetScanner = false;
 
-	ImGui::Begin("A Duck", nullptr,
+	ImGui::Begin("B Duck", nullptr,
 		ImGuiWindowFlags_NoScrollbar |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_AlwaysAutoResize);
@@ -85,7 +86,7 @@ void Duck::ShowMenu()
 		//ImGui::LabelText("GameVersion", Offset::GameVersion.c_str());
 		ImGui::Checkbox("Show Console", &ShowConsoleWindow);
 		ImGui::Checkbox("Show Object Explorer", &ShowObjectExplorerWindow);
-		//ImGui::Checkbox("Show Offset Scanner", &ShowOffsetScanner);
+		ImGui::Checkbox("Show Offset Scanner", &ShowOffsetScanner);
 		if (ImGui::TreeNode("Benchmarks")) {
 
 			Reader.GetBenchmarks().ImGuiDraw();
@@ -112,8 +113,8 @@ void Duck::ShowMenu()
 	if (ShowObjectExplorerWindow) 
 		ObjectExplorer::ImGuiDraw(*CurrentGameState);
 
-	//if (ShowOffsetScanner)
-	//	OffsetScanner::ImGuiDraw();
+	if (ShowOffsetScanner)
+		OffsetScanner::ImGuiDraw();
 }
 
 void Duck::ShowConsole()

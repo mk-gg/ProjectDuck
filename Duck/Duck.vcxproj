@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetExt>.pyd</TargetExt>
+    <TargetExt>.dll</TargetExt>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -260,6 +260,7 @@
     <ClInclude Include="MemoryReadable.h" />
     <ClInclude Include="ObjectExplorer.h" />
     <ClInclude Include="Offset.h" />
+    <ClInclude Include="OffsetScanner.h" />
     <ClInclude Include="Precompiled.h" />
     <ClInclude Include="PyExecutionContext.h" />
     <ClInclude Include="PyImGui.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="ObjectExplorer.cpp" />
     <ClCompile Include="Offset.cpp" />
+    <ClCompile Include="OffsetScanner.cpp" />
     <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
