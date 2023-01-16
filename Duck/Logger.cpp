@@ -15,7 +15,7 @@ Logger::Logger(std::shared_ptr<std::iostream> stream)
 	this->stream = stream;
 }
 
-void Logger::Log(const char* str, ...)
+void Logger::Log(const char * str, ...)
 {
 	static char buff[2048];
 	va_list va;
@@ -43,7 +43,7 @@ void Logger::GetLines(std::list<std::string>& lines)
 	streamMutex.unlock();
 }
 
-void Logger::LogAll(const char* str, ...)
+void Logger::LogAll(const char * str, ...)
 {
 	static char buff[2048];
 	va_list va;

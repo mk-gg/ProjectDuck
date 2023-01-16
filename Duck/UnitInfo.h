@@ -90,7 +90,7 @@ public:
 	float basicAttackWindup;
 
 
-
+	void ImGuiDraw();
 	void SetTag(std::string& str);
 	bool HasTag(UnitTag tag);
 	std::string StringifyTags();

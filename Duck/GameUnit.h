@@ -27,6 +27,7 @@ public:
 
 	UnitInfo* staticData;
 
+	GameUnit();
 	GameUnit(std::string name);
 
 	void ReadFromBaseAddress(int addr);

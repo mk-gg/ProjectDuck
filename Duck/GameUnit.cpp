@@ -1,6 +1,11 @@
 #include "GameUnit.h"
 #include "GameData.h"
 
+GameUnit::GameUnit()
+{
+
+}
+
 GameUnit::GameUnit(std::string name)
 	:GameObject(name)
 {
@@ -23,7 +28,7 @@ void GameUnit::ReadFromBaseAddress(int addr)
 	critMulti = ReadFloat(addr + Offset::ObjCritMulti);
 	abilityPower = ReadFloat(addr + Offset::ObjAbilityPower);
 	atkSpeedMulti = ReadFloat(addr + Offset::ObjAtkSpeedMulti);
-	attackRange = ReadFloat(addr + 0x12B8);
+	attackRange = ReadFloat(addr + Offset::ObjAtkRange);
 
 	isDead = ReadInt(addr + Offset::ObjSpawnCount) % 2;
 	lvl = ReadInt(addr + Offset::ObjLvl);
@@ -54,19 +59,8 @@ void GameUnit::ImGuiDraw()
 
 	ImGui::Separator();
 	if (ImGui::TreeNode("Static Data")) {
-		ImGui::DragFloat("Acquisition Radius", &staticData->acquisitionRange);
-		ImGui::DragFloat("Gameplay Radius", &staticData->gameplayRadius);
-		ImGui::DragFloat("Pathing Radius", &staticData->pathRadius);
-		ImGui::DragFloat("Selection Radius", &staticData->selectionRadius);
-		ImGui::DragFloat("Base Attack Range", &staticData->baseAttackRange);
-		ImGui::DragFloat("Base Movement Speed", &staticData->baseMovementSpeed);
-		ImGui::DragFloat("Basic Attack Speed", &staticData->basicAttackMissileSpeed);
-		ImGui::DragFloat("Basic Attack Windup", &staticData->basicAttackWindup);
-		ImGui::DragFloat("Attack Speed Ratio", &staticData->attackSpeedRatio);
-		ImGui::DragFloat("HP Bar Height", &staticData->healthBarHeight);
-		ImGui::Text("Tags");
-		ImGui::TextColored(ImVec4(0.9f, 0.6f, 0.3f, 1.f), staticData->StringifyTags().c_str());
-
+		
+		staticData->ImGuiDraw();
 		ImGui::TreePop();
 	}
 }

@@ -6,6 +6,8 @@
 #include "d3dx9shader.h"
 #include "Offset.h"
 #include "Memory.h"
+#include "Globals.h"
+#include "PyStructs.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -20,8 +22,9 @@ LPDIRECT3DDEVICE9 Duck::DxDevice = NULL;
 std::mutex Duck::DxDeviceMutex;
 std::condition_variable Duck::OverlayInitialized;
 GameReader Duck::Reader;
-HWND Duck::LeagueWindowHandle;
-RECT Duck::WindowRect;
+
+PyExecutionContext Duck::ScriptContext;
+ScriptManager Duck::ScriptManager;
 
 
 
@@ -30,11 +33,13 @@ void Duck::Run()
 	try {
 		DxDeviceMutex.lock();
 
-		Logger::File.Log("Starting up Duck...\n");
-		HookDirectX();
 		
-		Logger::File.Log("Loading Game Data..");
+		
+		
 		GameData::LoadAsync();
+
+	
+		HookDirectX();
 	}
 	catch (std::exception& error) {
 		Logger::File.Log("Failed starting up Duck %s\n", error.what());
@@ -44,22 +49,15 @@ void Duck::Run()
 
 
 
-bool Duck::CheckGameDataLoading()
+bool Duck::CheckEssentialsLoaded()
 {
-	if (GameData::LoadProgress->complete)
+	if (!GameData::LoadProgress->allLoaded)
+		GameData::ImGuiDrawLoader();
+
+	if (GameData::LoadProgress->essentialsLoaded)
 		return true;
-	else
-	{
-		ImGui::Begin("Duck Loader", NULL, ImGuiWindowFlags_AlwaysAutoResize);
-		ImGui::Text(GameData::LoadProgress->currentlyLoading);
-		ImGui::ProgressBar(GameData::LoadProgress->percentDone);
 
-		if (GameData::LoadProgress->complete)
-			Logger::LogAll("Loaded Game Database");
-
-		ImGui::End();
-		return false;
-	}
+	return false;
 }
 
 void Duck::ShowMenu(GameState& state)
@@ -67,12 +65,16 @@ void Duck::ShowMenu(GameState& state)
 	static bool ShowConsoleWindow = true;
 	static bool ShowObjectExplorerWindow = true;
 
-	ImGui::Begin("Duck", nullptr,
+	ImGui::Begin("PY Duck", nullptr,
 		ImGuiWindowFlags_NoScrollbar |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_AlwaysAutoResize);
 
-	if (ImGui::BeginMenu("1 24 Development")) {
+	if (ImGui::BeginMenu("Development")) 
+	{
+		if (ImGui::Button("Reload Scripts"))
+			LoadScripts();
+
 		ImGui::Checkbox("Show Console", &ShowConsoleWindow);
 		ImGui::Checkbox("Show Object Explorer", &ShowObjectExplorerWindow);
 		if (ImGui::TreeNode("Benchmarks")) {
@@ -83,16 +85,24 @@ void Duck::ShowMenu(GameState& state)
 		ImGui::EndMenu();
 	}
 
-	if (ImGui::BeginMenu("Menu Settings")) {
+	if (ImGui::BeginMenu("Menu Settings")) 
+	{
 		ImGui::ShowStyleSelector("Style");
 		ImGui::EndMenu();
 	}
 
+	ImGui::Separator();
+	if (state.gameStarted)
+		ScriptManager.ImGuiDrawMenu(ScriptContext);
+
+
 	ImGui::End();
 
-	if (ShowConsoleWindow) ShowConsole();
+	if (ShowConsoleWindow) 
+		ShowConsole();
 
-	if (ShowObjectExplorerWindow) ObjectExplorer::ImGuiDraw(state);
+	if (ShowObjectExplorerWindow) 
+		ObjectExplorer::ImGuiDraw(state);
 }
 
 void Duck::ShowConsole()
@@ -119,22 +129,38 @@ void Duck::WaitForOverlayToInit()
 
 void Duck::InitializeOverlay()
 {
-	Logger::File.Log("Initializing overlay");
+	Logger::LogAll("Initializing overlay");
 
-	LeagueWindowHandle = FindWindowA("RiotWindowClass", NULL);
-	OriginalWindowMessageHandler = WNDPROC(SetWindowLongA(LeagueWindowHandle, GWL_WNDPROC, LONG_PTR(HookedWindowMessageHandler)));
+	HWND hWindow = FindWindowA("RiotWindowClass", NULL);
+	OriginalWindowMessageHandler = WNDPROC(SetWindowLongA(hWindow, GWL_WNDPROC, LONG_PTR(HookedWindowMessageHandler)));
 
 	ImGui::CreateContext();
 
-	if (!ImGui_ImplWin32_Init(LeagueWindowHandle))
+	if (!ImGui_ImplWin32_Init(hWindow))
 		throw std::runtime_error("Failed to initialize ImGui_ImplWin32_Init");
 
 	if (!ImGui_ImplDX9_Init(DxDevice))
 		throw std::runtime_error("Failed to initialize ImGui_ImplDX9_Init");
 
-	Logger::Console.Log("Initialized Duck Overlay!");
+	Logger::LogAll("Initialized Duck Overlay!");
 	OverlayInitialized.notify_all();
-	GetWindowRect(LeagueWindowHandle, &WindowRect);
+	//GetWindowRect(LeagueWindowHandle, &WindowRect);
+}
+
+void Duck::InitializePython()
+{
+	Logger::LogAll("Initializing Python");
+	PyImport_AppendInittab("duck", &PyInit_Duck);
+	Py_Initialize();
+}
+
+void Duck::LoadScripts()
+{
+	fs::path pathScripts = Globals::WorkingDir;
+	pathScripts.append("scripts");
+	std::string pathStr = pathScripts.u8string();
+
+	ScriptManager.LoadScriptsFromFolder(pathStr);
 }
 
 void Duck::Update()
@@ -143,11 +169,16 @@ void Duck::Update()
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	
 
-	if (CheckGameDataLoading()) {
+	if (CheckEssentialsLoaded())
+	{
+		//ImGui::ShowDemoWindow();
 		GameState& state = Reader.GetNextState();
 		ShowMenu(state);
-	};
+	}
+
+
 
 
 	// Render
@@ -162,12 +193,12 @@ void Duck::Update()
 
 void Duck::HookDirectX()
 {
-	/*
+	
 	static const int SearchLength = 0x500000;
 	static const int PresentVTableIndex = 17;
 	static const int EndSceneVTableIndex = 42;
 
-	Logger::File.Log("Hooking DirectX");
+	Logger::LogAll("Hooking DirectX");
 
 	DWORD objBase = (DWORD)LoadLibraryA("d3d9.dll");
 	DWORD stopAt = objBase + SearchLength;
@@ -201,7 +232,7 @@ void Duck::HookDirectX()
 		throw std::runtime_error(Strings::Format("Failed to hook DirectX present. Detours error code: %d"));
 
 	DetourTransactionCommit();
-	*/
+	/*
 
 
 	static const int SearchLength = 0x500000;
@@ -244,6 +275,7 @@ void Duck::HookDirectX()
 
 	device->Release();
 	Logger::File.Log("Successfully hooked DirectX");
+	*/
 }
 
 void Duck::UnhookDirectX()
@@ -263,7 +295,9 @@ HRESULT __stdcall Duck::HookedD3DPresent(LPDIRECT3DDEVICE9 Device, const RECT* p
 	try {
 		if (DxDevice == NULL) {
 			DxDevice = Device;
+			InitializePython();
 			InitializeOverlay();
+			LoadScripts();
 		}
 		Update();
 	}
@@ -282,7 +316,7 @@ HRESULT __stdcall Duck::HookedD3DPresent(LPDIRECT3DDEVICE9 Device, const RECT* p
 
 LRESULT ImGuiWindowMessageHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	/*
+	
 	auto& io = ImGui::GetIO();
 
 	switch (msg)
@@ -343,7 +377,7 @@ LRESULT ImGuiWindowMessageHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
-	*/
+	/*
 	auto& io = ImGui::GetIO();
 
 	switch (msg)
@@ -391,11 +425,12 @@ LRESULT ImGuiWindowMessageHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 
 	return true;
+	*/
 }
 
 LRESULT WINAPI Duck::HookedWindowMessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	/*
+	
 	if (ImGuiWindowMessageHandler(hWnd, msg, wParam, lParam))
 		return true;
 
@@ -411,9 +446,9 @@ LRESULT WINAPI Duck::HookedWindowMessageHandler(HWND hWnd, UINT msg, WPARAM wPar
 		::PostQuitMessage(0);
 		return 0;
 	}
-	return CallWindowProcA(OriginalWindowMessageHandler,	hWnd, msg, wParam, lParam);
-	*/
-
+	return CallWindowProcA(OriginalWindowMessageHandler, hWnd, msg, wParam, lParam);
+	
+	/*
 	ImGuiWindowMessageHandler(hWnd, msg, wParam, lParam);
 
 	switch (msg)
@@ -429,4 +464,5 @@ LRESULT WINAPI Duck::HookedWindowMessageHandler(HWND hWnd, UINT msg, WPARAM wPar
 	}
 
 	return CallWindowProcA(OriginalWindowMessageHandler, hWnd, msg, wParam, lParam);
+	*/
 }

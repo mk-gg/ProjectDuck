@@ -15,6 +15,7 @@ public:
 
 	SpellInfo* staticData;
 
+	GameMissile();
 	GameMissile(std::string name);
 	void ReadFromBaseAddress(int addr);
 	void ImGuiDraw();

@@ -32,6 +32,7 @@ int Offset::ObjExpiry = 0x298;
 int Offset::ObjCrit = 0x1858;
 int Offset::ObjCritMulti = 0x12D4;
 int Offset::ObjAbilityPower = 0x1758;
+int Offset::ObjAtkRange = 0x13A4;
 int Offset::ObjAtkSpeedMulti = 0x132C;
 int Offset::ObjItemList = 0x35F8;
 
@@ -69,7 +70,7 @@ int Offset::MissileDestIdx = 0x318; // 0x314
 int Offset::MissileStartPos = 0x2E0;
 int Offset::MissileEndPos = 0x2EC;
 
-int Offset::MinimapObject = 0x3143C88;
+int Offset::MinimapObject = 0x315CD38;
 int Offset::MinimapObjectHud = 0x15C;
 int Offset::MinimapHudPos = 0x3C;
 int Offset::MinimapHudSize = 0x44;

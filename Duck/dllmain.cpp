@@ -1,6 +1,7 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
-#include "pch.h"
-#include "PyStructs.h"
+
+
+
 #include "Duck.h"
 #include "Strings.h"
 #include <Windows.h>
@@ -10,8 +11,10 @@
 
 
 DWORD WINAPI OverlayThreadEntryPoint(LPVOID lpParam) {
+    Logger::File.Log("Starting up Duck");
+    Duck duck;
 
-    Duck::Run();
+    duck.Run();
 
     return 0;
 }

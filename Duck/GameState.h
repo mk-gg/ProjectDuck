@@ -8,6 +8,7 @@ struct GameState
 	GameRenderer renderer;
 	GameHud      hud;
 	float time;
+	bool gameStarted;
 	std::map<int, std::shared_ptr<GameObject>> objectCache;
 	std::shared_ptr<GameObject> player;
 };

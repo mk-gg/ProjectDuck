@@ -13,8 +13,8 @@ public:
 	void End();
 
 	const char* name;
-	float                             lastMs = 0.f;
-	float                             avgMs = 0.f;
+	float lastMs = 0.f;
+	float avgMs = 0.f;
 	high_resolution_clock::time_point timeBegin;
 };
 
@@ -23,7 +23,8 @@ template<class T>
 class BenchmarkValue 
 {
 public:
-	BenchmarkValue(const char* name) {
+	BenchmarkValue(const char* name) 
+	{
 		this->name = name;
 	}
 

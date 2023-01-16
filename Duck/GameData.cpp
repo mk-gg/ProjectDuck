@@ -27,68 +27,121 @@ std::map<int, ItemInfo*>                  GameData::Items;
 
 void GameData::LoadAsync()
 {
+	Logger::LogAll("Loading Game Data");
 	std::thread loadThread(GameData::Load);
 	loadThread.detach();
 }
 
 
-UnitInfo* GameData::GetUnit(std::string& str)
+UnitInfo * GameData::GetUnit(std::string & str)
 {
 	auto find = Units.find(str);
 	return (find == Units.end() ? nullptr : find->second);
 }
 
-SpellInfo* GameData::GetSpell(std::string& str)
+SpellInfo * GameData::GetSpell(std::string & str)
 {
 	auto find = Spells.find(str);
 	return (find == Spells.end() ? nullptr : find->second);
 }
 
-ItemInfo* GameData::GetItem(int id)
+ItemInfo * GameData::GetItem(int id)
 {
 	auto find = Items.find(id);
 	return (find == Items.end() ? nullptr : find->second);
 }
 
-PDIRECT3DTEXTURE9 GameData::GetImage(std::string& str)
+PDIRECT3DTEXTURE9 GameData::GetImage(std::string & str)
 {
 	auto find = Images.find(str);
 	return (find == Images.end() ? nullptr : find->second);
+}
+
+void GameData::ImGuiDrawLoader()
+{
+	ImGui::SetNextWindowSize(ImVec2(200, 200));
+	ImGui::Begin("Duck Loader", NULL, ImGuiWindowFlags_NoResize);
+	ImGui::Text("Spell Database");
+	ImGui::ProgressBar(LoadProgress->spellLoadPercent);
+
+	ImGui::Text("Unit Database");
+	ImGui::ProgressBar(LoadProgress->unitsLoadPercent);
+
+	ImGui::Text("Items Database");
+	ImGui::ProgressBar(LoadProgress->itemsLoadPercent);
+
+	ImGui::Text("Image Database");
+	ImGui::ProgressBar(LoadProgress->imagesLoadPercent);
+	ImGui::End();
+}
+
+void GameData::ImGuiDrawObjects()
+{
+	static char filterBuf[200];
+	ImGui::InputText("Filter", filterBuf, 200);
+
+	std::string filter(filterBuf);
+	if (ImGui::CollapsingHeader("Units")) {
+		for (auto& pair : Units) {
+			if (pair.first.find(filter) != std::string::npos) {
+				if (ImGui::TreeNode(pair.first.c_str())) {
+					pair.second->ImGuiDraw();
+					ImGui::TreePop();
+				}
+			}
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Spells")) {
+		for (auto& pair : Spells) {
+			if (pair.first.find(filter) != std::string::npos) {
+				if (ImGui::TreeNode(pair.first.c_str())) {
+					pair.second->ImGuiDraw();
+					ImGui::TreePop();
+				}
+			}
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Images")) {
+		for (auto& pair : Images) {
+			if (pair.first.find(filter) != std::string::npos) {
+				if (ImGui::TreeNode(pair.first.c_str())) {
+					ImGui::Image(pair.second, ImVec2(48, 48));
+					ImGui::TreePop();
+				}
+			}
+		}
+	}
 }
 
 void GameData::Load()
 {
 	Duck::WaitForOverlayToInit();
 
-	LoadProgress->currentlyLoading = "Loading Spell Database";
-	Logger::LogAll(LoadProgress->currentlyLoading);
-	LoadSpells("SpellData.json", 0.1f);
-	LoadSpells("SpellDataCustom.json", 0.15f);
+	LoadSpells("SpellData.json", LoadProgress->spellLoadPercent, 0.9f);
+	LoadSpells("SpellDataCustom.json", LoadProgress->spellLoadPercent, 1.f);
 	Logger::LogAll("Loaded %zu spells", Spells.size());
 
-	LoadProgress->currentlyLoading = "Loading Unit Database";
-	Logger::LogAll(LoadProgress->currentlyLoading);
-	LoadUnits("UnitData.json", 0.3f);
+	
+	LoadUnits("UnitData.json", LoadProgress->unitsLoadPercent, 1.f);
 	Logger::LogAll("Loaded %zu units", Units.size());
 
-	LoadProgress->currentlyLoading = "Loading Item Database";
-	Logger::LogAll(LoadProgress->currentlyLoading);
-	LoadItems("ItemData.json", 0.4f);
+	LoadItems("ItemData.json", LoadProgress->itemsLoadPercent, 1.f);
 	Logger::LogAll("Loaded %zu items", Items.size());
 
-	LoadProgress->currentlyLoading = "Loading Image Database";
-	Logger::LogAll(LoadProgress->currentlyLoading);
-	LoadImages("icons_spells", 0.8f);
-	LoadImages("icons_champs", 0.95f);
-	LoadImages("icons_extra", 1.f);
+	LoadProgress->essentialsLoaded = true;
+
+	LoadImagesFromZip("icons_spells.zip", LoadProgress->imagesLoadPercent, 0.8f);
+	LoadImagesFromZip("icons_champs.zip", LoadProgress->imagesLoadPercent, 0.95f);
+	LoadImagesFromZip("icons_extra.zip", LoadProgress->imagesLoadPercent, 1.f);
 	Logger::LogAll("Loaded %zu images", Images.size());
 
 	Logger::LogAll("Static data loading complete");
-	LoadProgress->percentDone = 1.f;
-	LoadProgress->complete = true;
+	LoadProgress->allLoaded = true;
 }
 
-void GameData::LoadSpells(const char* fileName, float percentEnd)
+void GameData::LoadSpells(const char* fileName, float& percentValue, float percentEnd)
 {
 	fs::path path = Globals::WorkingDir;
 	path.append(FolderData).append(fileName);
@@ -102,7 +155,7 @@ void GameData::LoadSpells(const char* fileName, float percentEnd)
 	json j;
 	file >> j;
 
-	float step = (percentEnd - LoadProgress->percentDone) / j.size();
+	float step = (percentEnd - percentValue) / j.size();
 	for (auto spell : j) {
 		SpellInfo* info = new SpellInfo();
 
@@ -121,12 +174,12 @@ void GameData::LoadSpells(const char* fileName, float percentEnd)
 		info->travelTime = spell["travelTime"].get<float>();
 		info->flags = (SpellFlags)(info->flags | (spell["projectDestination"] ? ProjectedDestination : 0));
 
-		LoadProgress->percentDone += step;
+		percentValue += step;
 		Spells[info->name] = info;
 	}
 }
 
-void GameData::LoadItems(const char* fileName, float percentEnd)
+void GameData::LoadItems(const char* fileName, float& percentValue, float percentEnd)
 {
 	fs::path path = Globals::WorkingDir;
 	path.append(FolderData).append(fileName);
@@ -140,7 +193,7 @@ void GameData::LoadItems(const char* fileName, float percentEnd)
 	json j;
 	file >> j;
 
-	float step = (percentEnd - LoadProgress->percentDone) / j.size();
+	float step = (percentEnd - percentValue) / j.size();
 	for (auto item : j) {
 
 		ItemInfo* info = new ItemInfo();
@@ -159,12 +212,12 @@ void GameData::LoadItems(const char* fileName, float percentEnd)
 		info->cost = item["cost"].get<float>();
 		info->id = item["id"].get<int>();
 
-		LoadProgress->percentDone += step;
+		percentValue += step;
 		Items[info->id] = info;
 	}
 }
 
-void GameData::LoadUnits(const char* fileName, float percentEnd)
+void GameData::LoadUnits(const char* fileName, float& percentValue, float percentEnd)
 {
 	fs::path path = Globals::WorkingDir;
 	path.append(FolderData).append(fileName);
@@ -178,7 +231,7 @@ void GameData::LoadUnits(const char* fileName, float percentEnd)
 	json j;
 	file >> j;
 
-	float step = (percentEnd - LoadProgress->percentDone) / j.size();
+	float step = (percentEnd - percentValue) / j.size();
 	for (auto unitObj : j) {
 
 		UnitInfo* unit = new UnitInfo();
@@ -203,54 +256,67 @@ void GameData::LoadUnits(const char* fileName, float percentEnd)
 		}
 
 		Units[unit->name] = unit;
-		LoadProgress->percentDone += step;
+		percentValue += step;
 	}
 }
 
-bool LoadTextureFromFile(const char* filename, PDIRECT3DTEXTURE9* out_texture)
-{
-	// Load texture from disk
+
+bool LoadTextureFromHeap(void* heap, int heapSize, PDIRECT3DTEXTURE9* outTexture) {
 	PDIRECT3DTEXTURE9 texture;
 
 	Duck::DxDeviceMutex.lock();
-	HRESULT hr = D3DXCreateTextureFromFileA(Duck::DxDevice, filename, &texture);
+	HRESULT hr = D3DXCreateTextureFromFileInMemory(Duck::DxDevice, heap, heapSize, &texture);
 	Duck::DxDeviceMutex.unlock();
 
 	if (hr != S_OK)
 		return false;
 
-	*out_texture = texture;
+	*outTexture = texture;
 	return true;
 }
 
-void GameData::LoadImages(const char* folderName, float percentEnd)
-{
+void GameData::LoadImagesFromZip(const char* zipName, float& percentValue, float percentEnd) {
 	fs::path path = Globals::WorkingDir;
-	path.append(FolderData).append(folderName);
+	path.append(FolderData).append(zipName);
+	const char* zipPath = path.u8string().c_str();
 
-	int nrFiles = std::distance(fs::directory_iterator(path), fs::directory_iterator());
-	float step = (percentEnd - LoadProgress->percentDone) / nrFiles;
+	Logger::LogAll("Opening %s", zipPath);
 
-	std::string folder = path.string();
-	WIN32_FIND_DATAA findData;
-	HANDLE hFind;
+	mz_zip_archive archive;
+	memset(&archive, 0, sizeof(archive));
+	if (!mz_zip_reader_init_file(&archive, zipPath, 0)) {
+		Logger::LogAll("Failed to load %s", zipName);
+		return;
+	}
 
-	// std::filesystem has some bugs for ascii paths so we use winapi
-	hFind = FindFirstFileA((folder + "\\*.png").c_str(), &findData);
-	do {
-		if (hFind != INVALID_HANDLE_VALUE) {
-			std::string filePath = folder + "/" + findData.cFileName;
+	int numImages = mz_zip_reader_get_num_files(&archive);
+	float step = (percentEnd - percentValue) / numImages;
 
-			PDIRECT3DTEXTURE9 image = NULL;
-			if (!LoadTextureFromFile(filePath.c_str(), &image))
-				Logger::LogAll("Failed to load %s", filePath.c_str());
-			else {
-				std::string fileName(findData.cFileName);
-				fileName.erase(fileName.find(".png"), 4);
-				Images[Strings::ToLower(fileName)] = image;
-			}
-
-			LoadProgress->percentDone += step;
+	for (int i = 0; i < numImages; ++i) {
+		mz_zip_archive_file_stat fileStat;
+		if (!mz_zip_reader_file_stat(&archive, i, &fileStat)) {
+			Logger::LogAll("Failed to get image num %d from %s", i, zipName);
+			continue;
 		}
-	} while (FindNextFileA(hFind, &findData));
+
+		size_t imgSize = 0;
+		void* imgBin = mz_zip_reader_extract_file_to_heap(&archive, fileStat.m_filename, &imgSize, 0);
+		if (imgBin == NULL) {
+			Logger::LogAll("Failed to uncompress image num %d from %s", i, zipName);
+			continue;
+		}
+
+		std::string imgName = std::string(fileStat.m_filename);
+		imgName.erase(imgName.size() - 4, imgName.size());
+
+		PDIRECT3DTEXTURE9 image = NULL;
+		if (!LoadTextureFromHeap(imgBin, fileStat.m_uncomp_size, &image))
+			Logger::LogAll("Failed to load %s", imgName);
+		else
+			Images[Strings::ToLower(imgName)] = image;
+
+		percentValue += step;
+	}
+
+	mz_zip_reader_end(&archive);
 }

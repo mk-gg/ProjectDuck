@@ -20,6 +20,7 @@ GameState& GameReader::GetNextState()
 	memcpy(&state.time, (void*)(baseAddr + Offset::GameTime), sizeof(float));
 
 	if (state.time > 1.f) {
+		state.gameStarted = true;
 		state.renderer.ReadFromBaseAddress(baseAddr);
 		state.hud.ReadFromBaseAddress(baseAddr);
 
@@ -133,7 +134,7 @@ GameObject* GameReader::CreateObject(int addr)
 	std::string name;
 	
 	int nameAddr = ReadInt(addr + Offset::ObjName);
-	if (!CantRead((void*)nameAddr, 1))
+	if (!CantRead((void*)nameAddr))
 		name = Memory::ReadString(nameAddr);
 
 	if (!name.empty()) 
@@ -189,8 +190,6 @@ void GameReader::ReadGameObject(int address)
 		if (find == objectCache.end()) 
 		{
 			obj = CreateObject(address);
-
-			/// If we can't create the object we blacklist it for performance
 			if (obj == nullptr) {
 				blacklistedObjects.insert(netId);
 				return;
@@ -198,8 +197,7 @@ void GameReader::ReadGameObject(int address)
 
 			obj->ReadFromBaseAddress(address);
 			AddToCache(obj);
-		}
-		else {
+		} else {
 			benchmark.cacheHits.value += 1;
 			obj = find->second.get();
 			obj->ReadFromBaseAddress(address);

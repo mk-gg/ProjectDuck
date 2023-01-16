@@ -1,5 +1,10 @@
 #include "GameMissile.h"
 
+GameMissile::GameMissile()
+{
+
+}
+
 GameMissile::GameMissile(std::string name)
 	:GameObject(name)
 {
@@ -29,11 +34,5 @@ void GameMissile::ImGuiDraw()
 	ImGui::DragInt("Dest Index", &destIdx);
 
 	ImGui::Separator();
-	ImGui::DragFloat("Cast Radius", &staticData->castRadius);
-	ImGui::DragFloat("Cast Range", &staticData->castRange);
-	ImGui::DragFloat("Delay", &staticData->delay);
-	ImGui::DragFloat("Height", &staticData->height);
-	ImGui::DragFloat("Speed", &staticData->speed);
-	ImGui::DragFloat("Travel Time", &staticData->travelTime);
-	ImGui::DragFloat("Width", &staticData->width);
+	staticData->ImGuiDraw();
 }

@@ -105,12 +105,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;DUCK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_IMPORT_EXPORT;USE_WINDOWS_DLL_SEMANTICS;WIN32;NDEBUG;DUCK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>C:\Users\Gramps\AppData\Local\Programs\Python\Python39-32\include;C:\boost_1_77_0;$(SolutionDir)Duck\includes;$(SolutionDir)Component</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <ForcedIncludeFiles>Precompiled.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,7 +120,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>C:\boost_1_77_0\lib32-msvc-14.2;C:\Users\Gramps\AppData\Local\Programs\Python\Python39-32\DLLs;C:\Users\Gramps\AppData\Local\Programs\Python\Python39-32\tcl;C:\Users\Gramps\AppData\Local\Programs\Python\Python39-32\Lib;C:\Users\Gramps\AppData\Local\Programs\Python\Python39-32\libs;$(SolutionDir)Duck\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;python39.lib;boost_python39-vc142-mt-x32-1_77.lib;detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -171,7 +172,6 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameUnit.h" />
     <ClInclude Include="Globals.h" />
-    <ClInclude Include="ImGuiDrawable.h" />
     <ClInclude Include="includes\audiodefs.h" />
     <ClInclude Include="includes\comdecl.h" />
     <ClInclude Include="includes\D2D1.h" />
@@ -256,8 +256,11 @@
     <ClInclude Include="MemoryReadable.h" />
     <ClInclude Include="ObjectExplorer.h" />
     <ClInclude Include="Offset.h" />
-    <ClInclude Include="pch.h" />
+    <ClInclude Include="Precompiled.h" />
+    <ClInclude Include="PyExecutionContext.h" />
     <ClInclude Include="PyStructs.h" />
+    <ClInclude Include="Script.h" />
+    <ClInclude Include="ScriptManager.h" />
     <ClInclude Include="SpellInfo.h" />
     <ClInclude Include="stbi\stb_image.h" />
     <ClInclude Include="UnitInfo.h" />
@@ -281,12 +284,12 @@
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="ObjectExplorer.cpp" />
     <ClCompile Include="Offset.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    <ClCompile Include="Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PyExecutionContext.cpp" />
+    <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ScriptManager.cpp" />
     <ClCompile Include="SpellInfo.cpp" />
     <ClCompile Include="UnitInfo.cpp" />
   </ItemGroup>
@@ -296,6 +299,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Library Include="libs\d3d9.lib" />
     <Library Include="libs\d3dx9.lib" />
     <Library Include="libs\detours.lib" />
     <Library Include="libs\syelog.lib" />

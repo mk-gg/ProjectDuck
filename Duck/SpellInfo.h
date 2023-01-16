@@ -50,6 +50,7 @@ public:
 	float speed;
 	float travelTime;
 
+	void ImGuiDraw();
 	SpellInfo* AddFlags(SpellFlags flags);
 };
 
