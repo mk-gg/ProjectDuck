@@ -225,16 +225,24 @@ void Duck::Update()
 	ImGui::NewFrame();
 	
 
-	if (CheckEssentialsLoaded())
-	{
-		//ImGui::ShowDemoWindow();
-		CurrentGameState = Reader.GetNextState();
-		if (CurrentGameState->gameStarted) {
-			SetupScriptExecutionContext();
-			ShowMenu();
-			ExecuteScripts();
+	__try {
+		if (CheckEssentialsLoaded())
+		{
+			//ImGui::ShowDemoWindow();
+			CurrentGameState = Reader.GetNextState();
+			if (CurrentGameState->gameStarted) {
+				SetupScriptExecutionContext();
+				ShowMenu();
+				ExecuteScripts();
+			}
 		}
+
 	}
+	__except (1) {
+		Logger::LogAll("SEH exception occured in main loop. This shouldn't happen.");
+	}
+
+	
 
 
 
@@ -363,7 +371,7 @@ HRESULT __stdcall Duck::HookedD3DPresent(LPDIRECT3DDEVICE9 Device, const RECT* p
 		Logger::File.Log("Standard exception occured %s", error.what());
 		UnhookDirectX();
 	}
-	catch (error_already_set) {
+	catch (error_already_set&) {
 		Logger::File.Log("Boost::Python exception occured %s", Script::GetPyError().c_str());
 		UnhookDirectX();
 	}

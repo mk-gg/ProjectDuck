@@ -20,7 +20,7 @@ GameState* GameReader::GetNextState()
 	benchmark.blacklistHits.value = 0;
 
 	baseAddr = (int)GetModuleHandle(NULL);
-	memcpy(&state.time, (void*)(baseAddr + Offset::GameTime), sizeof(float));
+	state.time = ReadFloat(baseAddr + Offset::GameTime);
 
 	if (state.time > 1.f) {
 		state.gameStarted = true;
