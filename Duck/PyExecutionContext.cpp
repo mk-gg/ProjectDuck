@@ -83,8 +83,8 @@ object PyExecutionContext::GetOthers()
 void PyExecutionContext::SetGameState(GameState* state)
 {
 	this->state = state;
-
 	time = state->time;
+
 	hovered = object(ptr(state->hovered.get()));
 	player = object(ptr(state->player.get()));
 
@@ -140,12 +140,12 @@ void PyExecutionContext::DrawCircleFilled(const Vector2& center, float radius, i
 
 void PyExecutionContext::DrawCircleWorld(const Vector3& center, float radius, int numPoints, float thickness, const ImVec4& color)
 {
-	state->renderer.DrawCircleAt(overlay, center, radius, false, numPoints, ImColor(color), thickness);
+	state->renderer.DrawCircleAt(overlay, center, radius, numPoints, ImColor(color), thickness);
 }
 
 void PyExecutionContext::DrawCircleWorldFilled(const Vector3& center, float radius, int numPoints, const ImVec4& color)
 {
-	state->renderer.DrawCircleAt(overlay, center, radius, true, numPoints, ImColor(color));
+	state->renderer.DrawCircleAtFilled(overlay, center, radius, numPoints, ImColor(color));
 }
 
 void PyExecutionContext::DrawLine(const Vector2& start, const Vector2& end, float thickness, const ImVec4& color)

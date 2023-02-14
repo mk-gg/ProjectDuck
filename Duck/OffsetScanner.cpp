@@ -87,17 +87,17 @@ void OffsetScanner::Scan()
 	int size = textSection->SizeOfRawData;
 
 	for (auto& sig : signatures) {
-		Logger::File.Log("Scanning %#010x to %#010x", start, start + size);
 		sig.Scan(start, size);
 	}
 	Scanning = false;
 }
 
-OffsetSignature::OffsetSignature(const char* name, const char* pattern, int extractIndex)
+OffsetSignature::OffsetSignature(const char* name, const char* pattern, int extractIndex, bool offsetIsBase)
 {
 	this->name = name;
 	this->pattern = pattern;
 	this->extractIndex = extractIndex;
+	this->offsetIsAddress = offsetIsBase;
 
 	std::string strByte;
 	std::istringstream iss(std::string(pattern), std::istringstream::in);
@@ -147,7 +147,8 @@ void OffsetSignature::Scan(int startAddr, int size)
 				}
 
 				if (matched) {
-					offset = *(int*)(mem + extractIndex) - (int)GetModuleHandle(NULL);
+					if (offsetIsAddress) offset = (int)mem - (int)GetModuleHandle(NULL);
+					else offset = *(int*)(mem + extractIndex) - (int)GetModuleHandle(NULL);
 					status = SCAN_FOUND;
 					return;
 				}

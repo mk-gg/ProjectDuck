@@ -82,8 +82,8 @@ void Duck::ShowMenu()
 		if (ImGui::Button("Reload Scripts"))
 			LoadScripts();
 
-		//ImGui::LabelText("VPath", Globals::WorkingDir.u8string().c_str());
-		//ImGui::LabelText("GameVersion", Offset::GameVersion.c_str());
+		ImGui::LabelText("VPath", Globals::WorkingDir.u8string().c_str());
+		ImGui::LabelText("Patch Version", Offset::GameVersion.c_str());
 		ImGui::Checkbox("Show Console", &ShowConsoleWindow);
 		ImGui::Checkbox("Show Object Explorer", &ShowObjectExplorerWindow);
 		ImGui::Checkbox("Show Offset Scanner", &ShowOffsetScanner);
@@ -167,6 +167,10 @@ void Duck::InitializePython()
 	exec("from duck import *");
 }
 
+void Duck::ExecuteScripts()
+{
+	ScriptManager.ExecuteScripts(ScriptContext);
+}
 
 void Duck::SetupScriptExecutionContext()
 {
@@ -211,10 +215,8 @@ void Duck::Update()
 		CurrentGameState = Reader.GetNextState();
 		if (CurrentGameState->gameStarted) {
 			SetupScriptExecutionContext();
-
 			ShowMenu();
-			ScriptManager.ExecuteScripts(ScriptContext);
-			//ExecuteScripts();
+			ExecuteScripts();
 		}
 	}
 

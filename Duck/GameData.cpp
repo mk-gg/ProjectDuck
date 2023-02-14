@@ -61,17 +61,14 @@ void GameData::ImGuiDrawLoader()
 {
 	ImGui::SetNextWindowSize(ImVec2(200, 200));
 	ImGui::Begin("Duck Loader", NULL, ImGuiWindowFlags_NoResize);
-	ImGui::Text("Spell Database");
-	ImGui::ProgressBar(LoadProgress->spellLoadPercent);
 
-	ImGui::Text("Unit Database");
-	ImGui::ProgressBar(LoadProgress->unitsLoadPercent);
 
-	ImGui::Text("Items Database");
-	ImGui::ProgressBar(LoadProgress->itemsLoadPercent);
+	ImGui::Text("Essentials Database");
+	ImGui::ProgressBar(LoadProgress->essentialsPercent);
 
 	ImGui::Text("Image Database");
 	ImGui::ProgressBar(LoadProgress->imagesLoadPercent);
+
 	ImGui::End();
 }
 
@@ -119,15 +116,15 @@ void GameData::Load()
 {
 	Duck::WaitForOverlayToInit();
 
-	LoadSpells("SpellData.json", LoadProgress->spellLoadPercent, 0.9f);
-	LoadSpells("SpellDataCustom.json", LoadProgress->spellLoadPercent, 1.f);
+	LoadSpells("SpellData.json", LoadProgress->essentialsPercent, 0.2f);
+	LoadSpells("SpellDataCustom.json", LoadProgress->essentialsPercent, 0.25f);
 	Logger::LogAll("Loaded %zu spells", Spells.size());
 
 	
-	LoadUnits("UnitData.json", LoadProgress->unitsLoadPercent, 1.f);
+	LoadUnits("UnitData.json", LoadProgress->essentialsPercent, 0.5f);
 	Logger::LogAll("Loaded %zu units", Units.size());
 
-	LoadItems("ItemData.json", LoadProgress->itemsLoadPercent, 1.f);
+	LoadItems("ItemData.json", LoadProgress->essentialsPercent, 0.8f);
 	Logger::LogAll("Loaded %zu items", Items.size());
 
 	LoadProgress->essentialsLoaded = true;

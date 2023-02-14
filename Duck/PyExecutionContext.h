@@ -6,13 +6,13 @@
 
 class PyExecutionContext
 {
-private:
-	PyImGui imgui;
-	GameState* state;
-	ImDrawList* overlay;
+
 
 
 public:
+	PyImGui imgui;
+	GameState* state;
+	ImDrawList* overlay;
 
 
 	float time;

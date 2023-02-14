@@ -10,9 +10,7 @@
 class LoadDataProgress
 {
 public:
-    float spellLoadPercent = 0.0f;
-    float unitsLoadPercent = 0.0f;
-    float itemsLoadPercent = 0.0f;
+    float essentialsPercent = 0.0f;
     float imagesLoadPercent = 0.0f;
 
     bool  essentialsLoaded = false;

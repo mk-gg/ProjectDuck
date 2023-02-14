@@ -8,6 +8,15 @@ script_info = {
 
 size_img_skill = 24
 
+settings = [
+	["Q", [35, 10],   10, 25, True], 
+	["W", [60, 10],   10, 25, True], 
+	["E", [85, 10],   10, 25, True], 
+	["R", [109, 10],  10, 25, True], 
+	["D", [149, -15], 10, 25, True], 
+	["F", [176, -15], 10, 25, True]
+]
+
 def duck_menu(ctx):
     pass
 
@@ -26,7 +35,7 @@ def draw_spell(ctx, spell, pos):
 
     ctx.image(spell.static.icon if spell.static else 'none', pos, pos + Vec2(size_img_skill, size_img_skill), color, 10)
     if cd > 0.0:
-        ctx.text(pos + Vec2(2, 5), str(int(cd)), Col.White)
+        ctx.text(pos + Vec2(3, 5), str(int(cd)), Col.White)
 
 def draw_tracker_for(ctx, champ):
     global size_img_skill
@@ -45,3 +54,5 @@ def draw_tracker_for(ctx, champ):
 def duck_exec(ctx):
     for champ in ctx.champs:
         draw_tracker_for(ctx, champ)
+        
+        #https://www.youtube.com/watch?v=PZ7lDrwYdZc

@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.pyd</TargetExt>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -159,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Benchmark.h" />
+    <ClInclude Include="ConfigSet.h" />
     <ClInclude Include="Duck.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameChampion.h" />
@@ -274,6 +275,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Benchmark.cpp" />
+    <ClCompile Include="ConfigSet.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Duck.cpp" />
     <ClCompile Include="GameChampion.cpp" />

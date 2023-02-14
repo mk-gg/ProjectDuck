@@ -1,0 +1,14 @@
+Starting up Duck
+Loading Game Data
+Hooking DirectX
+Found base of d3d9.dll at: 0x698c0000
+Found D3D Device at: 0x6991b024
+Initializing Python
+Initializing overlay
+Initialized Duck Overlay!
+Loading scripts from C:\Users\Gramps\source\repos\ProjectDuck\Deployable\scripts
+Loading script gank_awareness
+Loading script indicators
+Loading script orbwalker
+Loading script spell_tracker
+Loading script vision_tracker

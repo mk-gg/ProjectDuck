@@ -8,21 +8,18 @@ std::string Script::GetPyError()
 	PyErr_Fetch(&exc, &val, &tb);
 	PyErr_NormalizeException(&exc, &val, &tb);
 
-	PyObject* errValStr = PyObject_Str(val);
-	PyObject* errExcLineNum = PyObject_Str(PyObject_GetAttrString(tb, "tb_lineno"));
-	PyObject* errExcType = PyObject_Str(exc);
+	object main = import("__main__");
+	exec("from traceback import format_exception", main.attr("__dict__"));
+	PyObject* formatFunc = object(main.attr("format_exception")).ptr();
 
-	std::string returnVal = "Exception ";
-	if (errExcType != NULL)
-		returnVal.append(extract<std::string>(errExcType));
-	returnVal.append(" occured on line: ");
-	if (errExcLineNum != NULL)
-		returnVal.append(extract<std::string>(errExcLineNum));
-	returnVal.append("\n");
-	if (errValStr != NULL)
-		returnVal.append(extract<std::string>(errValStr));
+	auto hExc = handle<>(exc);
+	auto hVal = handle<>(val);
+	auto hTb = handle<>(tb);
+	list errList = call<list>(formatFunc, hExc, hVal, hTb);
+	str  errStr = str("");
+	errStr = errStr.join(errList);
 
-	return returnVal;
+	return std::string(extract<const char*>(errStr));
 }
 
 Script::Script()
@@ -126,7 +123,7 @@ bool Script::LoadFromFile(std::string& file)
 			LoadFunc(&functions[ScriptFunction::ON_MENU], "duck_menu") &&
 			LoadFunc(&functions[ScriptFunction::ON_LOAD], "duck_on_load")) {
 
-			
+		
 			neverExecuted = true;
 			loaded = true;
 			return true;

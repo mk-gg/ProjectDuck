@@ -43,6 +43,7 @@ private:
 
 	static void InitializePython();
 	static void LoadScripts();
+	static void ExecuteScripts();
 
 	static void SetupScriptExecutionContext();
 
