@@ -31,6 +31,7 @@ Script::Script()
 	functions[ScriptFunction::ON_LOOP] = NULL;
 	functions[ScriptFunction::ON_LOAD] = NULL;
 	functions[ScriptFunction::ON_MENU] = NULL;
+	functions[ScriptFunction::ON_SAVE] = NULL;
 }
 
 Script::~Script()
@@ -121,9 +122,12 @@ bool Script::LoadFromFile(std::string& file)
 		if (LoadInfo() &&
 			LoadFunc(&functions[ScriptFunction::ON_LOOP], "duck_exec") &&
 			LoadFunc(&functions[ScriptFunction::ON_MENU], "duck_menu") &&
-			LoadFunc(&functions[ScriptFunction::ON_LOAD], "duck_on_load")) {
-
+			LoadFunc(&functions[ScriptFunction::ON_LOAD], "duck_on_load") &&
+			LoadFunc(&functions[ScriptFunction::ON_SAVE], "duck_on_save")) {
 		
+			config.SetSaveInterval(100);
+			config.SetConfigFile(fileName.c_str());
+			config.Load();
 			neverExecuted = true;
 			loaded = true;
 			return true;
@@ -140,7 +144,7 @@ void Script::Execute(PyExecutionContext& ctx, ScriptFunction func)
 
 	try {
 		neverExecuted = false;
-		call<void>(functions[func], boost::ref(ctx));
+		call<void>(functions[func], object(boost::ref(ctx)));
 	}
 	catch (error_already_set) {
 		error.clear();

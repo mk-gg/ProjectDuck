@@ -9,6 +9,7 @@
 #include "Logger.h"
 #include "GameReader.h"
 #include "ScriptManager.h"
+#include "ConfigSet.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx9.h"
@@ -51,6 +52,7 @@ public:
 	static std::mutex DxDeviceMutex;
 	static LPDIRECT3DDEVICE9 DxDevice;
 	static GameState* CurrentGameState;
+	static ConfigSet Configs;
 	static HWND LeagueWindowHandle;
 	static RECT WindowRect;
 

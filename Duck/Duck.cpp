@@ -29,6 +29,7 @@ GameReader Duck::Reader;
 
 PyExecutionContext Duck::ScriptContext;
 ScriptManager Duck::ScriptManager;
+ConfigSet Duck::Configs("duck");
 
 
 
@@ -39,7 +40,7 @@ void Duck::Run()
 
 		DxDeviceMutex.lock();
 
-		
+		Configs.Load();
 		
 		
 		GameData::LoadAsync();
@@ -68,44 +69,58 @@ bool Duck::CheckEssentialsLoaded()
 
 void Duck::ShowMenu()
 {
-	static bool ShowConsoleWindow = true;
-	static bool ShowObjectExplorerWindow = true;
-	static bool ShowOffsetScanner = false;
+	//static bool ShowConsoleWindow = true;
+	//static bool ShowObjectExplorerWindow = true;
+	//static bool ShowOffsetScanner = false;
+	static bool ShowConsoleWindow = Configs.GetBool("show_console", false);
+	static bool ShowObjectExplorerWindow = Configs.GetBool("show_obj_explorer", false);
+	static bool ShowOffsetScanner = Configs.GetBool("show_offset_scanner", false);
 
-	ImGui::Begin("B Duck", nullptr,
+
+	if (ImGui::Begin("Duck", nullptr,
 		ImGuiWindowFlags_NoScrollbar |
 		ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_AlwaysAutoResize);
+		ImGuiWindowFlags_AlwaysAutoResize)) {
 
-	if (ImGui::BeginMenu("Development")) 
-	{
-		if (ImGui::Button("Reload Scripts"))
-			LoadScripts();
+		if (ImGui::BeginMenu("Development")) {
 
-		ImGui::LabelText("VPath", Globals::WorkingDir.u8string().c_str());
-		ImGui::LabelText("Patch Version", Offset::GameVersion.c_str());
-		ImGui::Checkbox("Show Console", &ShowConsoleWindow);
-		ImGui::Checkbox("Show Object Explorer", &ShowObjectExplorerWindow);
-		ImGui::Checkbox("Show Offset Scanner", &ShowOffsetScanner);
-		if (ImGui::TreeNode("Benchmarks")) {
+			if (ImGui::Button("Reload Scripts"))
+				LoadScripts();
 
-			Reader.GetBenchmarks().ImGuiDraw();
-			ImGui::TreePop();
+			ImGui::LabelText("VPath", Globals::WorkingDir.u8string().c_str());
+			ImGui::LabelText("Patch Version", Offset::GameVersion.c_str());
+			ImGui::Checkbox("Show Console", &ShowConsoleWindow);
+			ImGui::Checkbox("Show Object Explorer", &ShowObjectExplorerWindow);
+			ImGui::Checkbox("Show Offset Scanner", &ShowOffsetScanner);
+
+
+			if (ImGui::TreeNode("Benchmarks")) {
+
+				Reader.GetBenchmarks().ImGuiDraw();
+				ImGui::TreePop();
+			}
+			ImGui::EndMenu();
 		}
-		ImGui::EndMenu();
-	}
 
-	if (ImGui::BeginMenu("Menu Settings")) 
-	{
-		ImGui::ShowStyleSelector("Style");
-		ImGui::EndMenu();
-	}
+		if (ImGui::BeginMenu("Menu Settings")) {
+			ImGui::ShowStyleSelector("Style");
+			ImGui::EndMenu();
+		}
 
-	ImGui::Separator();
-	ScriptManager.ImGuiDrawMenu(ScriptContext);
+		ImGui::Separator();
+		ScriptManager.ImGuiDrawMenu(ScriptContext);
 
+		ImGui::End();
 
-	ImGui::End();
+		if (Configs.IsTimeToSave()) {
+			Configs.SetBool("show_console", ShowConsoleWindow);
+			Configs.SetBool("show_obj_explorer", ShowConsoleWindow);
+			Configs.SetBool("show_offset_scanner", ShowOffsetScanner);
+			Configs.Save();
+		}
+	
+	}	
+
 
 	if (ShowConsoleWindow) 
 		ShowConsole();
@@ -116,6 +131,7 @@ void Duck::ShowMenu()
 	if (ShowOffsetScanner)
 		OffsetScanner::ImGuiDraw();
 }
+
 
 void Duck::ShowConsole()
 {

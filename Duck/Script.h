@@ -1,14 +1,16 @@
 #pragma once
 #include "PyExecutionContext.h"
 #include <string>
+#include "ConfigSet.h"
 
 using namespace boost::python;
 
-enum ScriptFunction 
+enum ScriptFunction
 {
 	ON_LOOP = 0,
 	ON_MENU = 1,
-	ON_LOAD = 2
+	ON_LOAD = 2,
+	ON_SAVE = 3
 };
 
 class Script 
@@ -20,7 +22,7 @@ private:
 	bool         LoadInfo();
 
 	PyObject* moduleObj;
-	PyObject* functions[3];
+	PyObject* functions[4];
 
 public:
 	Script();
@@ -40,6 +42,7 @@ public:
 	std::string  description;
 	std::string  targetChamp;
 
+	ConfigSet config;
 
 };
 

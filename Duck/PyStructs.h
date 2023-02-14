@@ -78,6 +78,10 @@ BOOST_PYTHON_MODULE(Duck)
 		.def_readonly("pos", &GameObject::pos)
 		.def_readonly("visible", &GameObject::isVisible)
 		.def_readonly("last_seen", &GameObject::lastSeen)
+
+		.def("ally_to", &GameObject::IsAllyTo)
+		.def("enemy_to", &GameObject::IsEnemyTo)
+		.def("__eq__", &GameObject::EqualsTo)
 		;
 
 	class_<GameSpell>("Spell", "Spell in-game")
@@ -163,6 +167,7 @@ BOOST_PYTHON_MODULE(Duck)
 	class_<PyExecutionContext>("Context", "Contains everything necessarry to create scripts. From utility functions to game data")
 		.def("log", &PyExecutionContext::Log, "Logs a message in the Duck Console")
 		.def_readonly("ui", &PyExecutionContext::GetImGuiInterface, "UI interface for drawing menus based on imgui")
+		.def_readonly("cfg", &PyExecutionContext::GetConfig, "Used to load/save script specific configs")
 		.def_readonly("hovered", &PyExecutionContext::hovered, "Game object under the mouse")
 		.def_readonly("player", &PyExecutionContext::player, "The champion used by the local player")
 
@@ -194,6 +199,17 @@ BOOST_PYTHON_MODULE(Duck)
 		.def("image", &PyExecutionContext::DrawImageRounded)
 		;
 
+
+	class_<ConfigSet>("Config")
+		.def("set_int", &ConfigSet::SetInt)
+		.def("set_bool", &ConfigSet::SetBool)
+		.def("set_float", &ConfigSet::SetFloat)
+		.def("set_str", &ConfigSet::SetStr)
+		.def("get_int", &ConfigSet::GetInt)
+		.def("get_bool", &ConfigSet::GetBool)
+		.def("get_float", &ConfigSet::GetFloat)
+		.def("get_str", &ConfigSet::GetStr)
+		;
 
 	class_<ImVec4>("Col", init<float, float, float, float>())
 		.def_readonly("Black", &Color::BLACK)

@@ -3,6 +3,9 @@
 #include "GameState.h"
 #include "PyImGui.h"
 #include "imgui/imgui.h"
+#include "ConfigSet.h"
+
+class Script;
 
 class PyExecutionContext
 {
@@ -13,6 +16,7 @@ public:
 	PyImGui imgui;
 	GameState* state;
 	ImDrawList* overlay;
+	Script* currentScript;
 
 
 	float time;
@@ -33,7 +37,9 @@ public:
 	object GetMinions();
 	object GetTurrets();
 	object GetOthers();
+	object GetConfig();
 
+	void SetScript(Script* script);
 	void SetGameState(GameState* state);
 	void SetImGuiOverlay(ImDrawList* overlay);
 	void Log(const char* msg);
