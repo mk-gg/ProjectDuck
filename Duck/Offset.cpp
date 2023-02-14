@@ -27,14 +27,14 @@ int Offset::ObjBonusAtk = 0x12D4; //NC
 int Offset::ObjMoveSpeed = 0x139C;
 int Offset::ObjSpellBook = 0x29C8; //
 int Offset::ObjName = 0x2DB4; //
-int Offset::ObjLvl = 0x35AC;
+int Offset::ObjLvl = 0x35A4; // 
 int Offset::ObjExpiry = 0x298;
 int Offset::ObjCrit = 0x1858;
 int Offset::ObjCritMulti = 0x12D4;
 int Offset::ObjAbilityPower = 0x1758;
 int Offset::ObjAtkRange = 0x13A4; // NC
 int Offset::ObjAtkSpeedMulti = 0x132C;
-int Offset::ObjItemList = 0x35F8;
+int Offset::ObjItemList = 0x35f0; //
 
 int Offset::ItemListItem = 0xC;
 int Offset::ItemInfo = 0x20;
