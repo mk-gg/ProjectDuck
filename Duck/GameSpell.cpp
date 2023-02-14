@@ -10,7 +10,11 @@ void GameSpell::ReadFromBaseAddress(int addr)
 	value = ReadFloat(addr + Offset::SpellSlotValue);
 
 	int spellInfo = ReadInt(addr + Offset::SpellSlotSpellInfo);
+	if (CantRead(spellInfo))
+		return;
 	int spellData = ReadInt(spellInfo + Offset::SpellInfoSpellData);
+	if (CantRead(spellData))
+		return;
 
 	name = Memory::ReadString(ReadInt(spellData + Offset::SpellDataSpellName));
 	name = Strings::ToLower(name);

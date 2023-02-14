@@ -26,6 +26,7 @@ GameState* Duck::CurrentGameState = NULL;
 std::mutex Duck::DxDeviceMutex;
 std::condition_variable Duck::OverlayInitialized;
 GameReader Duck::Reader;
+HWND Duck::LeagueWindowHandle;
 
 PyExecutionContext Duck::ScriptContext;
 ScriptManager Duck::ScriptManager;
@@ -64,7 +65,7 @@ void Duck::Run()
 		HookDirectX();
 	}
 	catch (std::exception& error) {
-		Logger::File.Log("Failed starting up Duck %s\n", error.what());
+		Logger::File("Failed starting up Duck %s\n", error.what());
 	}
 }
 
@@ -159,7 +160,7 @@ void Duck::ShowConsole()
 	ImGui::Begin("Console");
 
 	std::list<std::string> lines;
-	Logger::Console.GetLines(lines);
+	Logger::GetConsoleLines(lines);
 
 	
 	for(auto& line : lines) {
@@ -180,17 +181,17 @@ void Duck::InitializeOverlay()
 {
 	Logger::LogAll("Initializing overlay");
 
-	HWND hWindow = FindWindowA("RiotWindowClass", NULL);
-	OriginalWindowMessageHandler = WNDPROC(SetWindowLongA(hWindow, GWL_WNDPROC, LONG_PTR(HookedWindowMessageHandler)));
-
+	LeagueWindowHandle = FindWindowA("RiotWindowClass", NULL);
+	OriginalWindowMessageHandler = WNDPROC(SetWindowLongA(LeagueWindowHandle, GWL_WNDPROC, LONG_PTR(HookedWindowMessageHandler)));
 	ImGui::CreateContext();
 
-	if (!ImGui_ImplWin32_Init(hWindow))
+	if (!ImGui_ImplWin32_Init(LeagueWindowHandle))
 		throw std::runtime_error("Failed to initialize ImGui_ImplWin32_Init");
 
 	if (!ImGui_ImplDX9_Init(DxDevice))
 		throw std::runtime_error("Failed to initialize ImGui_ImplDX9_Init");
 
+	ImGui::GetIO().IniFilename = Globals::ImGuiIniPath.c_str();
 	Logger::LogAll("Initialized Duck Overlay!");
 	OverlayInitialized.notify_all();
 	//GetWindowRect(LeagueWindowHandle, &WindowRect);
@@ -206,7 +207,8 @@ void Duck::InitializePython()
 
 void Duck::ExecuteScripts()
 {
-	ScriptManager.ExecuteScripts(ScriptContext);
+	if (GetForegroundWindow() == LeagueWindowHandle)
+		ScriptManager.ExecuteScripts(ScriptContext);
 }
 
 void Duck::SetupScriptExecutionContext()
@@ -290,7 +292,7 @@ void Duck::HookDirectX()
 	DWORD objBase = (DWORD)LoadLibraryA("d3d9.dll");
 	DWORD stopAt = objBase + SearchLength;
 
-	Logger::File.Log("Found base of d3d9.dll at: %#010x", objBase);
+	Logger::File("Found base of d3d9.dll at: %#010x", objBase);
 	while (objBase++ < stopAt)
 	{
 		if ((*(WORD*)(objBase + 0x00)) == 0x06C7
@@ -305,7 +307,7 @@ void Duck::HookDirectX()
 	if (objBase >= stopAt)
 		throw std::runtime_error("Did not find D3D device");
 
-	Logger::File.Log("Found D3D Device at: %#010x", objBase);
+	Logger::File("Found D3D Device at: %#010x", objBase);
 
 	PDWORD VTable;
 	*(DWORD*)&VTable = *(DWORD*)objBase;
@@ -367,7 +369,7 @@ void Duck::HookDirectX()
 
 void Duck::UnhookDirectX()
 {
-	Logger::File.Log("Unhooking DirectX");
+	Logger::File("Unhooking DirectX");
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
@@ -389,15 +391,15 @@ HRESULT __stdcall Duck::HookedD3DPresent(LPDIRECT3DDEVICE9 Device, const RECT* p
 		Update();
 	}
 	catch (std::exception& error) {
-		Logger::File.Log("Standard exception occured %s", error.what());
+		Logger::File("Standard exception occured %s", error.what());
 		UnhookDirectX();
 	}
 	catch (error_already_set&) {
-		Logger::File.Log("Boost::Python exception occured %s", Script::GetPyError().c_str());
+		Logger::File("Boost::Python exception occured %s", Script::GetPyError().c_str());
 		UnhookDirectX();
 	}
 	catch (...) {
-		Logger::File.Log("Unexpected exception occured");
+		Logger::File("Unexpected exception occured");
 		UnhookDirectX();
 	}
 	DxDeviceMutex.lock();

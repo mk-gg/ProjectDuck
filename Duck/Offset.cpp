@@ -74,3 +74,6 @@ int Offset::MinimapObject = 0x316FE24; //
 int Offset::MinimapObjectHud = 0x160; //
 int Offset::MinimapHudPos = 0x3C; // 
 int Offset::MinimapHudSize = 0x44;
+
+int Offset::Chat = 0x31768A8;
+int Offset::ChatIsOpen = 0x814;

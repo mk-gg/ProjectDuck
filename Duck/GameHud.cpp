@@ -5,9 +5,17 @@
 
 void GameHud::ReadFromBaseAddress(int baseAddr)
 {
-	int minimapObject = ReadInt(baseAddr + Offset::MinimapObject);
-	int minimapHud = ReadInt(minimapObject + Offset::MinimapObjectHud);
+	__try {
 
-	memcpy(&minimapSize, AsPtr(minimapHud + Offset::MinimapHudSize), sizeof(Vector2));
-	memcpy(&minimapPosition, AsPtr(minimapHud + Offset::MinimapHudPos), sizeof(Vector2));
+		int chat = ReadInt(baseAddr + Offset::Chat);
+		isChatOpen = ReadBool(chat + Offset::ChatIsOpen);
+		int minimapObject = ReadInt(baseAddr + Offset::MinimapObject);
+		int minimapHud = ReadInt(minimapObject + Offset::MinimapObjectHud);
+
+
+		memcpy(&minimapSize, AsPtr(minimapHud + Offset::MinimapHudSize), sizeof(Vector2));
+		memcpy(&minimapPosition, AsPtr(minimapHud + Offset::MinimapHudPos), sizeof(Vector2));
+	}
+	__except (1){}
+
 }

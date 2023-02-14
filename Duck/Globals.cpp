@@ -12,7 +12,13 @@ fs::path FindWorkingDir()
 
 }
 
+std::string GetImGuiIniPath() {
 
+	fs::path path = Globals::WorkingDir;
+	path /= "imgui.ini";
+
+	return path.u8string();
+}
 
 fs::path GetConfigsDir() {
 
@@ -25,4 +31,5 @@ fs::path GetConfigsDir() {
 fs::path Globals::WorkingDir = fs::path("C:\\Users\\Gramps\\source\\repos\\ProjectDuck\\Deployable");
 //fs::path Globals::WorkingDir = FindWorkingDir();
 fs::path Globals::ConfigsDir = GetConfigsDir();
+std::string Globals::ImGuiIniPath = GetImGuiIniPath();
 

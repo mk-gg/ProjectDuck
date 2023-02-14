@@ -25,15 +25,17 @@ void GameChampion::ReadFromBaseAddress(int addr)
 
 	/// Read items
 	int itemList = ReadInt(addr + Offset::ObjItemList);
+	if (CantRead(itemList))
+		return;
 	for (int i = 0; i < 6; ++i) {
 		items[i] = nullptr;
 
 		int item = ReadInt(itemList + i * 0x10 + Offset::ItemListItem);
-		if (item == 0)
+		if (CantRead(item))
 			continue;
 
 		int itemInfo = ReadInt(item + Offset::ItemInfo);
-		if (itemInfo == 0)
+		if (CantRead(itemInfo))
 			continue;
 
 		int id = ReadInt(itemInfo + Offset::ItemInfoId);

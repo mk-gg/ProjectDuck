@@ -117,7 +117,8 @@ BOOST_PYTHON_MODULE(Duck)
 		.def_readonly("ap", &GameUnit::abilityPower)
 		.def_readonly("atk_speed_multi", &GameUnit::atkSpeedMulti)
 		.def_readonly("atk_range", &GameUnit::attackRange)
-
+		.def_readonly("atk_speed", &GameUnit::GetAttackSpeed)
+		.def_readonly("static", &GameUnit::GetStaticData)
 		.def("has_tags", &GameUnit::HasTags)
 		;
 
@@ -166,6 +167,7 @@ BOOST_PYTHON_MODULE(Duck)
 		.def("endgroup", &PyImGui::EndGroup)
 
 		.def("listbox", &PyImGui::ListBox)
+		.def("combo", &PyImGui::Combo)
 		;
 
 	class_<PyExecutionContext>("Context", "Contains everything necessarry to create scripts. From utility functions to game data")
@@ -182,6 +184,11 @@ BOOST_PYTHON_MODULE(Duck)
 		.def_readonly("minions", &PyExecutionContext::GetMinions)
 		.def_readonly("jungle", &PyExecutionContext::GetJungle)
 		.def_readonly("others", &PyExecutionContext::GetOthers)
+		.def("attack", &PyExecutionContext::AttackUnit)
+		.def("move", &PyExecutionContext::MoveToLocation)
+		.def("move", &PyExecutionContext::MoveToMouse)
+
+		.def("is_held", &PyExecutionContext::IsKeyDown)
 
 		.def("is_on_screen", &PyExecutionContext::IsScreenPointOnScreen, PyExecutionContext::IsScreenPointOnScreenOverloads())
 		.def("is_on_screen", &PyExecutionContext::IsWorldPointOnScreen, PyExecutionContext::IsWorldPointOnScreenOverloads())

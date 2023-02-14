@@ -4,18 +4,20 @@
 #include <mutex>
 #include <list>
 
-class Logger
-{
+class Logger {
+
 private:
-	std::shared_ptr<std::iostream> stream;
-	std::mutex streamMutex;
+	static std::shared_ptr<std::fstream>      FileStream;
+	static std::shared_ptr<std::stringstream> ConsoleStream;
+
+	static std::mutex                         FileMutex;
+	static std::mutex                         ConsoleMutex;
 
 public:
-	static Logger File;
-	static Logger Console;
-	Logger(std::shared_ptr<std::iostream> stream);
+	static void   InitLoggers(const char* pathFileLog);
 
-	void Log(const char* str, ...);
-	void GetLines(std::list<std::string>& lines);
-	static void LogAll(const char* str, ...);
+	static void   LogAll(const char* str, ...);
+	static void   Console(const char* str, ...);
+	static void   File(const char* str, ...);
+	static void   GetConsoleLines(std::list<std::string>& lines);
 };

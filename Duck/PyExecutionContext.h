@@ -44,6 +44,11 @@ public:
 	void SetImGuiOverlay(ImDrawList* overlay);
 	void Log(const char* msg);
 
+	bool    IsKeyDown(int key);
+	void    MoveToMouse();
+	void    MoveToLocation(const Vector3& location);
+	void    AttackUnit(const GameUnit& unit);
+
 	Vector2 World2Screen(const Vector3& world);
 	Vector2 World2Minimap(const Vector3& world);
 	float   DistanceOnMinimap(float dist);

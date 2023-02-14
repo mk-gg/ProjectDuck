@@ -77,5 +77,8 @@ public:
 	static int MinimapObjectHud;
 	static int MinimapHudPos;
 	static int MinimapHudSize;
+
+	static int Chat;
+	static int ChatIsOpen;
 };
 

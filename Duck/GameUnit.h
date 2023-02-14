@@ -33,4 +33,6 @@ public:
 	void ReadFromBaseAddress(int addr);
 	void ImGuiDraw();
 	bool HasTags(UnitTag tag);
+	float GetAttackSpeed();
+	object GetStaticData();
 };

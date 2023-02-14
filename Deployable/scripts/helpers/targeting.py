@@ -55,4 +55,4 @@ class TargetSelector:
         j = json.loads(s)
         selector.selected_targeter = j[0]
 
-        return selector 
+        return selector

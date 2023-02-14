@@ -21,10 +21,10 @@ std::vector<OffsetSignature> OffsetScanner::signatures = std::vector<OffsetSigna
 	OffsetSignature("ObjectManager",     "8B 0D ? ? ? ? E8 ? ? ? ? FF 77",                   2), 
 	OffsetSignature("Renderer",          "8B 15 ? ? ? ? 83 EC 08 F3",                        2), 
 	OffsetSignature("ViewMatrix",        "B9 ? ? ? ? E8 ? ? ? ? B9 ? ? ? ? E9 ? ? ? ?",      2),
-	OffsetSignature("MinimapObject",     "FF 52 04 8B 0D ? ? ? ? E8 ? ? ? ?",                5),
+	OffsetSignature("MinimapObject",     "A3 ? ? ? ? 89 35 ? ? ? ? 85 DB",                1),
 	OffsetSignature("LocalPlayer",       "8B 3D ? ? ? ? 3B F7 75 09", 2),
 	OffsetSignature("GameTime",          "F3 0F 11 05 ? ? ? ? 8B 49",                        4),
-
+	OffsetSignature("Chat",              "8B 0D ? ? ? ? 8A D8 85 C9",             2),
 	});
 
 void OffsetScanner::ImGuiDraw()

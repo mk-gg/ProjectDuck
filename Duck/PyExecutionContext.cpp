@@ -13,12 +13,40 @@ std::shared_ptr<list> MakePyList(std::vector<std::shared_ptr<T>>& cList) {
 	return pyList;
 }
 
+bool PyExecutionContext::IsKeyDown(int key)
+{
+	if (state->hud.isChatOpen)
+		return false;
+
+	return currentScript->input.IsDown((HKey)key);
+}
+
+void PyExecutionContext::MoveToMouse() {
+	if (!state->hud.isChatOpen)
+		currentScript->input.IssueClick(CT_RIGHT_CLICK);
+}
+
+
+
+
+void PyExecutionContext::MoveToLocation(const Vector3& location)
+{
+	if (!state->hud.isChatOpen)
+		currentScript->input.IssueClickAtAndReturn(CT_RIGHT_CLICK, state->renderer.WorldToScreen(location));
+}
+
+void PyExecutionContext::AttackUnit(const GameUnit& unit)
+{
+	if (!state->hud.isChatOpen)
+		currentScript->input.IssueClickAtAndReturn(CT_RIGHT_CLICK, state->renderer.WorldToScreen(unit.pos));
+}
+
 void PyExecutionContext::Log(const char* msg)
 {
 	if (msg == NULL)
-		Logger::Console.Log("NULL");
+		Logger::Console("NULL");
 	else
-		Logger::Console.Log(msg);
+		Logger::Console(msg);
 
 }
 Vector2 PyExecutionContext::World2Screen(const Vector3& world)

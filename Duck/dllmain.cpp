@@ -5,13 +5,16 @@
 #include "Duck.h"
 #include "Strings.h"
 #include <Windows.h>
-
+#include "Globals.h"
 
 
 
 
 DWORD WINAPI OverlayThreadEntryPoint(LPVOID lpParam) {
-    Logger::File.Log("Starting up Duck");
+    fs::path pathFileLogger = Globals::WorkingDir;
+    pathFileLogger.append("logs.txt");
+    Logger::InitLoggers(pathFileLogger.u8string().c_str());
+    Logger::File("Starting up Duck");
     Duck duck;
 
     duck.Run();
