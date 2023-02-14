@@ -8,21 +8,21 @@
 
 using namespace std::chrono;
 
+using namespace std::chrono;
+
 enum ClickType {
 	CT_LEFT_CLICK,
 	CT_RIGHT_CLICK
 };
 
-class IoStep 
-{
+class IoStep {
 
 public:
 	void         Start() {};
 	virtual bool Update() = 0;
 };
 
-class InputController 
-{
+class InputController {
 
 public:
 
@@ -39,7 +39,7 @@ public:
 
 	static int ImGuiKeySelect(const char* label, int key);
 
-
+public:
 	static const float ScreenWidth;
 	static const float ScreenHeight;
 	static const float WidthRatio;
@@ -55,22 +55,18 @@ private:
 	bool                              pressed[300] = { 0 };
 };
 
-class IoDelay : public IoStep 
-{
+class IoDelay : public IoStep {
 
 public:
-	IoDelay(float delayMillis) 
-{
+	IoDelay(float delayMillis) {
 		this->delayMillis = delayMillis;
 	}
 
-	void Start() 
-{
+	void Start() {
 		startTime = high_resolution_clock::now();
 	}
 
-	bool Update() 
-{
+	bool Update() {
 		timeDiff = high_resolution_clock::now() - startTime;
 		if (timeDiff.count() < delayMillis)
 			return false;
@@ -82,17 +78,14 @@ public:
 	high_resolution_clock::time_point startTime;
 };
 
-class IoPressKey : public IoStep 
-{
+class IoPressKey : public IoStep {
 
 public:
-	IoPressKey(HKey key) 
-{
+	IoPressKey(HKey key) {
 		this->key = key;
 	}
 
-	bool Update() 
-{
+	bool Update() {
 		INPUT input = { 0 };
 		input.type = INPUT_KEYBOARD;
 		input.ki.wScan = key;
@@ -108,17 +101,14 @@ public:
 	HKey key;
 };
 
-class IoReleaseKey : public IoStep 
-{
+class IoReleaseKey : public IoStep {
 
 public:
-	IoReleaseKey(HKey key) 
-{
+	IoReleaseKey(HKey key) {
 		this->key = key;
 	}
 
-	bool Update() 
-{
+	bool Update() {
 		INPUT input = { 0 };
 		input.type = INPUT_KEYBOARD;
 		input.ki.wScan = key;
@@ -134,17 +124,14 @@ public:
 	HKey key;
 };
 
-class IoMoveMouse : public IoStep 
-{
+class IoMoveMouse : public IoStep {
 
 public:
-	IoMoveMouse(Vector2 pos) 
-{
+	IoMoveMouse(Vector2 pos) {
 		this->pos = pos;
 	}
 
-	bool Update() 
-{
+	bool Update() {
 		INPUT input = { 0 };
 		input.type = INPUT_MOUSE;
 		input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
@@ -160,18 +147,14 @@ public:
 	Vector2 pos;
 };
 
-class IoPressMouse : public IoStep 
-
-{
+class IoPressMouse : public IoStep {
 
 public:
-	IoPressMouse(ClickType type) 
-	{
+	IoPressMouse(ClickType type) {
 		this->type = type;
 	}
 
-	bool Update() 
-	{
+	bool Update() {
 		INPUT input = { 0 };
 		input.type = INPUT_MOUSE;
 		input.mi.dwFlags = (type == ClickType::CT_LEFT_CLICK ? MOUSEEVENTF_LEFTDOWN : MOUSEEVENTF_RIGHTDOWN);
@@ -183,17 +166,14 @@ public:
 	ClickType type;
 };
 
-class IoReleaseMouse : public IoStep 
-{
+class IoReleaseMouse : public IoStep {
 
 public:
-	IoReleaseMouse(ClickType type) 
-	{
+	IoReleaseMouse(ClickType type) {
 		this->type = type;
 	}
 
-	bool Update() 
-	{
+	bool Update() {
 		INPUT input = { 0 };
 		input.type = INPUT_MOUSE;
 		input.mi.dwFlags = (type == ClickType::CT_LEFT_CLICK ? MOUSEEVENTF_LEFTUP : MOUSEEVENTF_RIGHTUP);
@@ -204,4 +184,3 @@ public:
 
 	ClickType type;
 };
-

@@ -49,8 +49,14 @@ def draw_spell(ctx, spell, pos):
     color = Col.White
     if spell.lvl == 0:
         color = Col.Gray
-    if cd > 0.0:
-        color = Col.Red
+    
+    if cd > 0.0 and cd < 2.0:
+        color = Col.DarkYellow
+    
+    if cd > 2.0:
+        color = Col.Brown
+    
+
 
     ctx.image(spell.static.icon if spell.static else 'none', pos, Vec2(size_img_skill, size_img_skill), color, 10)
     if cd > 0.0:

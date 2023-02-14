@@ -30,8 +30,23 @@ GameReader Duck::Reader;
 PyExecutionContext Duck::ScriptContext;
 ScriptManager Duck::ScriptManager;
 ConfigSet Duck::Configs("duck");
+InputController Duck::inputController;
 
 
+bool ChooseMenuStyle(const char* label, int& currentStyle)
+{
+	return ImGui::Combo(label, &currentStyle, "Dark\0Light\0Classic\0");
+}
+
+int SetStyle(int style) {
+	switch (style)
+	{
+	case 0: ImGui::StyleColorsDark(); break;
+	case 1: ImGui::StyleColorsLight(); break;
+	case 2: ImGui::StyleColorsClassic(); break;
+	}
+	return style;
+}
 
 
 void Duck::Run()
@@ -76,8 +91,10 @@ void Duck::ShowMenu()
 	static bool ShowObjectExplorerWindow = Configs.GetBool("show_obj_explorer", false);
 	static bool ShowOffsetScanner = Configs.GetBool("show_offset_scanner", false);
 
+	static HKey ShowMenuKey = (HKey)Configs.GetInt("show_key", HKey::LSHIFT);
+	static int  MenuStyle = SetStyle(Configs.GetInt("menu_style", 0));
 
-	if (ImGui::Begin("Duck", nullptr,
+	if (inputController.IsDown(ShowMenuKey) && ImGui::Begin("Duck", nullptr,
 		ImGuiWindowFlags_NoScrollbar |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_AlwaysAutoResize)) {
@@ -103,7 +120,9 @@ void Duck::ShowMenu()
 		}
 
 		if (ImGui::BeginMenu("Menu Settings")) {
-			ImGui::ShowStyleSelector("Style");
+			if (ChooseMenuStyle("Menu Style", MenuStyle))
+				SetStyle(MenuStyle);
+			ShowMenuKey = (HKey)InputController::ImGuiKeySelect("Show Menu Key", ShowMenuKey);
 			ImGui::EndMenu();
 		}
 
@@ -116,6 +135,8 @@ void Duck::ShowMenu()
 			Configs.SetBool("show_console", ShowConsoleWindow);
 			Configs.SetBool("show_obj_explorer", ShowConsoleWindow);
 			Configs.SetBool("show_offset_scanner", ShowOffsetScanner);
+			Configs.SetInt("show_key", ShowMenuKey);
+			Configs.SetInt("menu_style", MenuStyle);
 			Configs.Save();
 		}
 	
@@ -501,8 +522,7 @@ LRESULT ImGuiWindowMessageHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
 LRESULT WINAPI Duck::HookedWindowMessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	
-	if (ImGuiWindowMessageHandler(hWnd, msg, wParam, lParam))
-		return true;
+	ImGuiWindowMessageHandler(hWnd, msg, wParam, lParam);
 
 	switch (msg)
 	{
