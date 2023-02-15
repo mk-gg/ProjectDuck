@@ -161,6 +161,7 @@
     <ClInclude Include="Benchmark.h" />
     <ClInclude Include="ConfigSet.h" />
     <ClInclude Include="Duck.h" />
+    <ClInclude Include="FakeMouse.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameChampion.h" />
     <ClInclude Include="GameData.h" />
@@ -280,6 +281,7 @@
     <ClCompile Include="ConfigSet.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Duck.cpp" />
+    <ClCompile Include="FakeMouse.cpp" />
     <ClCompile Include="GameChampion.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="GameHud.cpp" />

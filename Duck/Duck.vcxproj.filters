@@ -369,6 +369,9 @@
     <ClInclude Include="SpellCast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FakeMouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logger.cpp">
@@ -459,6 +462,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpellCast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FakeMouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

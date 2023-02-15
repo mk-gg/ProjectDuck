@@ -9,6 +9,7 @@
 #include "Globals.h"
 #include "PyStructs.h"
 #include "OffsetScanner.h"
+#include "FakeMouse.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -57,7 +58,7 @@ void Duck::Run()
 		DxDeviceMutex.lock();
 
 		Configs.Load();
-		
+		FakeMouse::Init();
 		
 		GameData::LoadAsync();
 

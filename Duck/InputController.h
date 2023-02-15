@@ -5,6 +5,7 @@
 #include <queue>
 #include <chrono>
 #include <windows.h>
+#include "FakeMouse.h"
 
 using namespace std::chrono;
 
@@ -34,8 +35,6 @@ public:
 	void IssuePressKey(HKey key);
 	void IssueClick(ClickType type);
 	void IssueClickAt(ClickType type, const Vector2& pos);
-	void IssueClickAtAndReturn(ClickType type, const Vector2& pos);
-	void IssueMoveCursor(const Vector2& pos);
 
 	static int ImGuiKeySelect(const char* label, int key);
 
@@ -124,26 +123,29 @@ public:
 	HKey key;
 };
 
-class IoMoveMouse : public IoStep {
+class IoSpoofMouse : public IoStep {
 
 public:
-	IoMoveMouse(Vector2 pos) {
+	IoSpoofMouse(Vector2 pos) {
 		this->pos = pos;
 	}
 
 	bool Update() {
-		INPUT input = { 0 };
-		input.type = INPUT_MOUSE;
-		input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
-		input.mi.dx = (LONG)(pos.x * InputController::WidthRatio);
-		input.mi.dy = (LONG)(pos.y * InputController::HeightRatio);
-
-		SendInput(1, &input, sizeof(INPUT));
-
+		FakeMouse::Enabled = true;
+		FakeMouse::FakePosition = pos;
 		return true;
 	}
 
 	Vector2 pos;
+};
+
+class IoUnspoofMouse : public IoStep {
+
+public:
+	bool Update() {
+		FakeMouse::Enabled = false;
+		return true;
+	}
 };
 
 class IoPressMouse : public IoStep {
