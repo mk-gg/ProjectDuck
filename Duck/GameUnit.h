@@ -8,7 +8,8 @@ class GameUnit : public GameObject {
 public:
 
 
-
+	bool  targetable;
+	bool  invulnerable;
 	bool  isDead;
 	float mana;
 	float health;

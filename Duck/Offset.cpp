@@ -36,6 +36,8 @@ int Offset::ObjAtkSpeedMulti = 0x132C;
 int Offset::ObjItemList = 0x35f0; //
 int Offset::ObjMissileName = 0x54;
 int Offset::ObjMissileSpellCast = 0x250;
+int Offset::ObjTargetable = 0xD04;
+int Offset::ObjInvulnerable = 0x3D4;
 
 int Offset::ItemListItem = 0xC;
 int Offset::ItemInfo = 0x20;

@@ -3,7 +3,7 @@
 #include "detours.h"
 
 bool             FakeMouse::Enabled = false;
-Vector2          FakeMouse::FakePosition;
+std::function<Vector2()>          FakeMouse::FakePositionGetter;
 GetCursorPosFunc FakeMouse::TrueGetCursorPos = GetCursorPos;
 
 void FakeMouse::Init() {
@@ -20,8 +20,9 @@ void FakeMouse::Init() {
 BOOL __stdcall FakeMouse::HookedGetCursorPos(LPPOINT lpPoint)
 {
 	if (lpPoint != NULL && FakeMouse::Enabled) {
-		lpPoint->x = FakeMouse::FakePosition.x;
-		lpPoint->y = FakeMouse::FakePosition.y;
+		Vector2 v = FakeMouse::FakePositionGetter();
+		lpPoint->x = v.x;
+		lpPoint->y = v.y;
 
 		return TRUE;
 	}

@@ -11,4 +11,6 @@ public:
 
 		type = OBJ_MINION;
 	}
+
+	Vector2 GetHpBarPosition();
 };

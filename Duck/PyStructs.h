@@ -110,6 +110,8 @@ BOOST_PYTHON_MODULE(Duck)
 
 	class_<GameUnit, bases<GameObject>>("Unit", "Unit object in-game")
 		.def_readonly("dead", &GameUnit::isDead)
+		.def_readonly("targetable", &GameUnit::targetable)
+		.def_readonly("invulnerable", &GameUnit::invulnerable)
 		.def_readonly("mana", &GameUnit::mana)
 		.def_readonly("health", &GameUnit::health)
 		.def_readonly("max_health", &GameUnit::maxHealth)
@@ -141,6 +143,7 @@ BOOST_PYTHON_MODULE(Duck)
 		;
 
 	class_<GameMinion, bases<GameUnit>>("Minion", "Represents a minion object")
+		.def_readonly("hpbar_pos", &GameMinion::GetHpBarPosition)
 		;
 
 	class_<GameJungle, bases<GameUnit>>("JungleMob", "Represents a jungle mob object")
@@ -163,7 +166,7 @@ BOOST_PYTHON_MODULE(Duck)
 		.def("dragfloat", &PyImGui::DragFloat, PyImGui::DragFloatOverloads())
 		.def("keyselect", &PyImGui::KeySelect)
 		.def("sliderfloat", &PyImGui::SliderFloat)
-
+		.def("sliderint", &PyImGui::SliderInt)
 		.def("image", &PyImGui::Image, PyImGui::ImageOverloads())
 
 		.def("header", &PyImGui::CollapsingHeader)
