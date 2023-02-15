@@ -20,6 +20,7 @@ public:
 
 
 	float time;
+	float ping;
 	object hovered;
 	object player;
 

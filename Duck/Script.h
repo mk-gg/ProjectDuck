@@ -42,6 +42,7 @@ public:
 	std::string  author;
 	std::string  description;
 	std::string  targetChamp;
+	std::string  icon;
 
 	ConfigSet config;
 	InputController input;

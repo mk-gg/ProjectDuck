@@ -87,6 +87,7 @@ bool GameRenderer::IsWorldPointOnScreen(const Vector3& point, float offsetX, flo
 	return IsScreenPointOnScreen(WorldToScreen(point), offsetX, offsetY);
 }
 
+
 void GameRenderer::DrawCircleAt(ImDrawList* canvas, const Vector3& worldPos, float radius, int numPoints, ImColor color, float thickness) const {
 
 	if (numPoints >= 200)

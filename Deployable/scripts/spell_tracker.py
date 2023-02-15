@@ -3,7 +3,8 @@ from duck import *
 script_info = {
     'author': 'Mk',
     'description': 'none',
-    'name': 'Spell Tracker'
+    'name': 'Spell Tracker',
+    'icon': 'menu-script'
 }
 
 size_img_skill = 24

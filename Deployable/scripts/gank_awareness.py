@@ -3,7 +3,8 @@ from duck import *
 script_info = {
     'author': 'Mk',
     'description': 'none',
-    'name': 'Gank Awareness'
+    'name': 'Gank Awareness',
+    'icon': 'menu-script'
 }
 
 size_portrait_minimap = 24

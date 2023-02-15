@@ -3,7 +3,8 @@ from duck import *
 script_info = {
     'author': 'mk',
     'description': 'none',
-    'name': 'Base'
+    'name': 'Base',
+    'icon': 'menu-script'
 }
 
 def duck_menu(ctx):

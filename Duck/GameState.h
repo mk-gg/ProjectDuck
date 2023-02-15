@@ -17,6 +17,7 @@ struct GameState
 	GameHud      hud;
 	float time;
 	bool gameStarted;
+	float ping;
 	
 	std::vector<std::shared_ptr<GameMinion>>    minions;
 	std::vector<std::shared_ptr<GameJungle>>    jungle;

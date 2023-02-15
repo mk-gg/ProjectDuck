@@ -2,6 +2,7 @@
 #include "HKey.h"
 #include "imgui/imgui.h"
 #include "InputController.h"
+#include "Color.h"
 
 class PyImGui 
 {
@@ -65,9 +66,10 @@ public:
 		return col;
 	}
 
-	void Image(const char* image, const Vector2& size) {
+	BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(ImageOverloads, Image, 2, 3);
+	void Image(const char* image, const Vector2& size, ImVec4 color = Color::WHITE) {
 		std::string imgStr(image);
-		ImGui::Image(GameData::GetImage(imgStr), (ImVec2&)size);
+		ImGui::Image(GameData::GetImage(imgStr), (ImVec2&)size, ImVec2(0, 0), ImVec2(1, 1), color);
 	}
 
 	BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DragIntOverloads, DragInt, 2, 5);
@@ -93,6 +95,14 @@ public:
 	void Separator() 
 	{
 		ImGui::Separator();
+	}
+
+	bool BeginMenu(const char* label) {
+		return ImGui::BeginMenu(label);
+	}
+
+	void EndMenu() {
+		ImGui::EndMenu();
 	}
 
 	bool CollapsingHeader(const char* text) 

@@ -22,8 +22,11 @@ bool PyExecutionContext::IsKeyDown(int key)
 }
 
 void PyExecutionContext::MoveToMouse() {
-	if (!state->hud.isChatOpen)
+	if (!state->hud.isChatOpen) {
+		if (state->hovered != nullptr && state->hovered->IsEnemyTo(*state->player.get()))
+			return;
 		currentScript->input.IssueClick(CT_RIGHT_CLICK);
+	}
 }
 
 
@@ -31,8 +34,11 @@ void PyExecutionContext::MoveToMouse() {
 
 void PyExecutionContext::MoveToLocation(const Vector3& location)
 {
-	if (!state->hud.isChatOpen)
+	if (!state->hud.isChatOpen) {
+		if (state->hovered != nullptr && state->hovered->IsEnemyTo(*state->player.get()))
+			return;
 		currentScript->input.IssueClickAtAndReturn(CT_RIGHT_CLICK, state->renderer.WorldToScreen(location));
+	}
 }
 
 void PyExecutionContext::AttackUnit(const GameUnit& unit)
@@ -124,6 +130,7 @@ void PyExecutionContext::SetScript(Script* script)
 void PyExecutionContext::SetGameState(GameState* state)
 {
 	this->state = state;
+	ping = state->ping;
 	time = state->time;
 
 	hovered = object(ptr(state->hovered.get()));

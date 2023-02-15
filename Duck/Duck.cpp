@@ -88,18 +88,28 @@ void Duck::ShowMenu()
 	//static bool ShowConsoleWindow = true;
 	//static bool ShowObjectExplorerWindow = true;
 	//static bool ShowOffsetScanner = false;
-	static bool ShowConsoleWindow = Configs.GetBool("show_console", false);
-	static bool ShowObjectExplorerWindow = Configs.GetBool("show_obj_explorer", false);
-	static bool ShowOffsetScanner = Configs.GetBool("show_offset_scanner", false);
+	static std::string IconDev("menu-dev");
+	static std::string IconSkinChanger("menu-cloth");
+	static std::string IconSettings("menu-settings");
 
-	static HKey ShowMenuKey = (HKey)Configs.GetInt("show_key", HKey::LSHIFT);
-	static int  MenuStyle = SetStyle(Configs.GetInt("menu_style", 0));
+	static bool  ShowConsoleWindow = Configs.GetBool("show_console", false);
+	static bool  ShowObjectExplorerWindow = Configs.GetBool("show_obj_explorer", false);
+	static bool  ShowOffsetScanner = Configs.GetBool("show_offset_scanner", false);
+
+	static HKey  ShowMenuKey = (HKey)Configs.GetInt("show_key", HKey::LSHIFT);
+	static int   MenuStyle = SetStyle(Configs.GetInt("menu_style", 0));
+	static float AveragePing = Configs.GetFloat("ping", 60.0f);
 
 	if (inputController.IsDown(ShowMenuKey) && ImGui::Begin("Duck", nullptr,
 		ImGuiWindowFlags_NoScrollbar |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_AlwaysAutoResize)) {
 
+		ImGui::SliderFloat("Average Ping", &AveragePing, 0.f, 150.f);
+		ScriptContext.ping = AveragePing;
+
+		ImGui::Image(GameData::GetImage(IconDev), ImVec2(15, 15));
+		ImGui::SameLine();
 		if (ImGui::BeginMenu("Development")) {
 
 			if (ImGui::Button("Reload Scripts"))
@@ -120,6 +130,8 @@ void Duck::ShowMenu()
 			ImGui::EndMenu();
 		}
 
+		ImGui::Image(GameData::GetImage(IconSettings), ImVec2(15, 15));
+		ImGui::SameLine();
 		if (ImGui::BeginMenu("Menu Settings")) {
 			if (ChooseMenuStyle("Menu Style", MenuStyle))
 				SetStyle(MenuStyle);
@@ -138,6 +150,7 @@ void Duck::ShowMenu()
 			Configs.SetBool("show_offset_scanner", ShowOffsetScanner);
 			Configs.SetInt("show_key", ShowMenuKey);
 			Configs.SetInt("menu_style", MenuStyle);
+			Configs.SetFloat("ping", AveragePing);
 			Configs.Save();
 		}
 	
