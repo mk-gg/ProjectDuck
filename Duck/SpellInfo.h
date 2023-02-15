@@ -42,7 +42,7 @@ public:
 	std::string icon;
 
 	
-	float delay;
+	float castTime;
 	float castRange;
 	float castRadius;
 	float width;

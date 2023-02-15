@@ -61,7 +61,7 @@ BOOST_PYTHON_MODULE(Duck)
 
 	class_<SpellInfo>("SpellStatic", "Static data loaded at runtime for a spell")
 		.def_readonly("icon", &SpellInfo::icon)
-		.def_readonly("delay", &SpellInfo::delay)
+		.def_readonly("cast_time", &SpellInfo::castTime)
 		.def_readonly("cast_range", &SpellInfo::castRange)
 		.def_readonly("cast_radius", &SpellInfo::castRadius)
 		.def_readonly("width", &SpellInfo::width)

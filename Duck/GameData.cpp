@@ -160,7 +160,7 @@ void GameData::LoadSpells(const char* fileName, float& percentValue, float perce
 		std::string strName = spell["name"].get<std::string>();
 
 		info->flags = (SpellFlags)spell["flags"].get<int>();
-		info->delay = spell["delay"].get<float>();
+		info->castTime = spell["castTime"].get<float>();
 		info->height = spell["height"].get<float>();
 		info->icon = Strings::ToLower(strIcon);
 		info->name = Strings::ToLower(strName);
