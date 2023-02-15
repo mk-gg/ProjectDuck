@@ -38,8 +38,9 @@ BOOST_PYTHON_MODULE(Duck)
 		.def_readonly("pathing_radius", &UnitInfo::pathRadius)
 		.def_readonly("gameplay_radius", &UnitInfo::gameplayRadius)
 
-		.def_readonly("basic_atk_speed", &UnitInfo::basicAttackMissileSpeed)
+		.def_readonly("basic_atk", &UnitInfo::GetBasicAttack)
 		.def_readonly("basic_atk_windup", &UnitInfo::basicAttackWindup)
+		.def_readonly("basic_atk_cast_time", &UnitInfo::basicAttackCastTime)
 		;
 
 	class_<ItemInfo>("ItemStatic", "Static data loaded at runtime for an item")

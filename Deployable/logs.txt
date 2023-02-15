@@ -13,7 +13,7 @@ Loading script orbwalker
 Loading script spell_tracker
 Loading script vision_tracker
 Loading script _base_
-Loaded 4164 spells
+Loaded 4171 spells
 Loaded 641 units
 Loaded 201 items
 Opening C:\Users\Gramps\source\repos\ProjectDuck\Deployable\data\icons_spells.zip

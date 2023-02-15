@@ -4,6 +4,7 @@
 #include <string>
 #include <bitset>
 #include <array>
+#include "SpellInfo.h"
 
 
 enum UnitTag 
@@ -86,14 +87,16 @@ public:
 	float pathRadius;
 	float gameplayRadius;
 
-	float basicAttackMissileSpeed;
+	SpellInfo* basicAttack;
 	float basicAttackWindup;
+	float basicAttackCastTime;
 
 
 	void ImGuiDraw();
 	void SetTag(std::string& str);
 	bool HasTag(UnitTag tag);
 	std::string StringifyTags();
+	object GetBasicAttack();
 
 
 };

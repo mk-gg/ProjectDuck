@@ -233,13 +233,16 @@ void GameData::LoadUnits(const char* fileName, float& percentValue, float percen
 
 		UnitInfo* unit = new UnitInfo();
 		std::string strName = unitObj["name"].get<std::string>();
+		std::string basicAtk = unitObj["basicAtk"].get<std::string>();
+
 		unit->acquisitionRange = unitObj["acquisitionRange"].get<float>();
 		unit->attackSpeedRatio = unitObj["attackSpeedRatio"].get<float>();
 		unit->baseAttackRange = unitObj["attackRange"].get<float>();
 		unit->baseAttackSpeed = unitObj["attackSpeed"].get<float>();
 		unit->baseMovementSpeed = unitObj["baseMoveSpeed"].get<float>();
-		unit->basicAttackMissileSpeed = unitObj["basicAtkMissileSpeed"].get<float>();
+		unit->basicAttack = GetSpell(basicAtk);
 		unit->basicAttackWindup = unitObj["basicAtkWindup"].get<float>();
+		unit->basicAttackCastTime = unitObj["basicAtkCastTime"].get<float>();
 		unit->gameplayRadius = unitObj["gameplayRadius"].get<float>();
 		unit->healthBarHeight = unitObj["healthBarHeight"].get<float>();
 		unit->name = Strings::ToLower(strName);
