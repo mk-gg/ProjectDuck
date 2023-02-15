@@ -38,7 +38,7 @@ Script::~Script()
 {
 	if (moduleObj != NULL)
 		Py_DECREF(moduleObj);
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 4; ++i) {
 		if (functions[i] != NULL)
 			Py_DECREF(functions[i]);
 	}

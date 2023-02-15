@@ -17,3 +17,7 @@ Loaded 4164 spells
 Loaded 641 units
 Loaded 201 items
 Opening C:\Users\Gramps\source\repos\ProjectDuck\Deployable\data\icons_spells.zip
+Opening C:\Users\Gramps\source\repos\ProjectDuck\Deployable\data\icons_champs.zip
+Opening C:\Users\Gramps\source\repos\ProjectDuck\Deployable\data\icons_extra.zip
+Loaded 1447 images
+Static data loading complete
