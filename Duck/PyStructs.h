@@ -93,11 +93,18 @@ BOOST_PYTHON_MODULE(Duck)
 		.def_readonly("static", &GameSpell::GetStaticData)
 		;
 
+	class_<SpellCast>("SpellCast", "Has data about a spell cast.")
+		.def_readonly("start_pos", &SpellCast::start)
+		.def_readonly("end_pos", &SpellCast::end)
+		.def_readonly("src_index", &SpellCast::srcIndex)
+		.def_readonly("dest_index", &SpellCast::destIndex)
+		.def_readonly("time_begin", &SpellCast::timeBegin)
+		.def_readonly("cast_time", &SpellCast::castTime)
+		.def_readonly("static", &SpellCast::GetStaticData)
+		;
+
 	class_<GameMissile, bases<GameObject>>("Missile", "Represent a missile object.")
-		.def_readonly("start_pos", &GameMissile::startPos)
-		.def_readonly("end_pos", &GameMissile::endPos)
-		.def_readonly("src_index", &GameMissile::srcIndex)
-		.def_readonly("dest_index", &GameMissile::destIndex)
+		.def_readonly("spell", &GameMissile::GetSpell)
 		;
 
 	class_<GameUnit, bases<GameObject>>("Unit", "Unit object in-game")

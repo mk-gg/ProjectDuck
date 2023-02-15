@@ -19,8 +19,9 @@ void GameChampion::ReadFromBaseAddress(int addr)
 
 	/// Read spells
 	int spellBook = addr + Offset::ObjSpellBook;
+	int spellSlots = spellBook + Offset::SpellBookSpellSlots;
 	for (int i = 0; i < 6; ++i) {
-		spells[i].ReadFromBaseAddress(ReadInt(spellBook + i * sizeof(int)));
+		spells[i].ReadFromBaseAddress(ReadInt(spellSlots + i * sizeof(int)));
 	}
 
 	/// Read items

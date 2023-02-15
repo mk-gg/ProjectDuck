@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "UnitInfo.h"
+#include "SpellCast.h"
 
 class GameUnit : public GameObject {
 
@@ -24,8 +25,10 @@ public:
 	float abilityPower;
 	float atkSpeedMulti;
 	float attackRange;
+	bool  hasCastingSpell = false;
 
 	UnitInfo* staticData;
+	SpellCast castingSpell;
 
 	GameUnit();
 	GameUnit(std::string name);
@@ -35,4 +38,5 @@ public:
 	bool HasTags(UnitTag tag);
 	float GetAttackSpeed();
 	object GetStaticData();
+	object GetCastingSpell();
 };

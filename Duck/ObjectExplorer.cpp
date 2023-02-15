@@ -47,18 +47,11 @@ void ObjectExplorer::ImGuiDraw(GameState& state)
 	}
 	else
 	{
-
-	}
 		ImGui::TextColored(Color::RED, "No local player");
-
-	if (state.hovered != nullptr) {
-		if (ImGui::TreeNode("Hovered")) {
-			state.hovered->ImGuiDraw();
-			ImGui::TreePop();
-		}
 	}
-	else
-		ImGui::TextColored(Color::RED, "Nothing hovered");
+		
+
+
 	
 	auto& renderer = state.renderer;
 	if (ImGui::TreeNode("Renderer")) 
@@ -120,6 +113,14 @@ void ObjectExplorer::ImGuiDraw(GameState& state)
 	if (ImGui::TreeNode("Static")) {
 		GameData::ImGuiDrawObjects();
 	}
+
+	ImGui::Separator();
+	if (state.hovered != nullptr) {
+		state.hovered->ImGuiDraw();
+		ImGui::TreePop();
+	}
+	else
+		ImGui::TextColored(Color::RED, "Nothing hovered");
 	
 	ImGui::End();
 }

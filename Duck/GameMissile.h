@@ -2,22 +2,19 @@
 #include "GameObject.h"
 #include "SpellInfo.h"
 #include "GameData.h"
+#include "SpellCast.h"
 
 class GameMissile : public GameObject
 {
 
 public:
 
-	short   srcIndex;
-	short   destIndex;
-	Vector3 startPos;
-	Vector3 endPos;
-
-	SpellInfo* staticData;
+	SpellCast  spell;
 
 	GameMissile();
 	GameMissile(std::string name);
 	void ReadFromBaseAddress(int addr);
 	void ImGuiDraw();
+	object GetSpell();
 
 };
